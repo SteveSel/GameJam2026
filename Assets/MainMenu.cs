@@ -5,7 +5,7 @@ public class MainMenu : MonoBehaviour
 {
     public void Jugar()
     {
-        SceneManager.LoadScene("DayTimeScene");
+        SceneManager.LoadScene("NightTimeScene");
     }
 
     public void Settings()
