@@ -12,8 +12,8 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 366528f7659fad6f2a61180a195955ef
   - enabled: 1
-    path: Assets/Scenes/NightTimeScene.unity
-    guid: aa2ddcb340134cdf2849f589b7abbba2
+    path: Assets/Scenes/DayTimeScene.unity
+    guid: eead89be6fecf8cb3bb9341ae6aa6739
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
