@@ -22,10 +22,19 @@ public class GameManager : MonoBehaviour
     public int currentAP = 3;
     public int maxAP = 3;
     public int playerLives = 3;
+    public int totalCardsInGame = 9;
 
     [Header("UI References")]
     public TextMeshProUGUI apText;
     public TextMeshProUGUI livesText;
+
+    [Header("UI Textos")]
+    public TextMeshProUGUI infoLog;
+
+    public void LogInfo(string message)
+    {
+        infoLog.text = message;
+    }
 
     void Awake()
     {
@@ -50,6 +59,20 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+    public CardLogic GetCardByID(int idToFind)
+    {
+        CardLogic[] allCards = FindObjectsByType<CardLogic>(FindObjectsSortMode.None);
+
+        foreach (CardLogic card in allCards)
+        {
+            if (card.cardID == idToFind)
+            {
+                return card;
+            }
+        }
+        return null;
+    }
+
     public void UseAP(int amount)
     {
         currentAP -= amount;
@@ -66,5 +89,20 @@ public class GameManager : MonoBehaviour
     {
         if (apText != null) apText.text = "AP: " + currentAP;
         if (livesText != null) livesText.text = "Vidas: " + playerLives;
+    }
+
+    public int CountRealDemons()
+    {
+        CardLogic[] allCards = FindObjectsByType<CardLogic>(FindObjectsSortMode.None);
+        int count = 0;
+
+        foreach (CardLogic card in allCards)
+        {
+            if (card.realRole == RoleType.Imp)
+            {
+                count++;
+            }
+        }
+        return count;
     }
 }
