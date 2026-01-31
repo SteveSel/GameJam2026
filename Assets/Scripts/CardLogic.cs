@@ -12,6 +12,7 @@ public class CardLogic : MonoBehaviour
     [Header("Estado")]
     public bool isRevealed = false;
     public bool isDead = false;
+    public bool isUsed;
 
     [Header("Referencias UI")]
     public Image roleIcon;
@@ -77,7 +78,7 @@ public class CardLogic : MonoBehaviour
             }
             else
             {
-                UseAbility();
+                if(!isUsed) UseAbility();
             }
         }
     }
@@ -115,6 +116,7 @@ public class CardLogic : MonoBehaviour
         }
 
         GameManager.Instance.UpdateUI();
+        GameManager.Instance.ToggleExecutionMode();
     }
 
     public void RevealCard()
@@ -145,6 +147,7 @@ public class CardLogic : MonoBehaviour
                 TryToInvestigate();
                 break;
         }
+        isUsed = true;
     }
 
     void TryToHeal()
