@@ -3,13 +3,20 @@ using System.Collections.Generic;
 
 public class CardDealer : MonoBehaviour
 {
-    [Header("Referencias")]
+    [Header("Referencias Visuales")]
     public GameObject prefabCarta;      
     public Transform contenedorCartas; 
 
-    [Header("Configuración de Tamaño")]
-    [Range(0.1f, 1.5f)] public float escalaCarta = 0.4f; // <--- ¡AQUÍ ESTÁ LA SOLUCIÓN!
+    [Header("Configuración de Nivel (Mazo)")]
+    public int totalCartas = 9;
+    [Tooltip("Roles que SIEMPRE aparecerán (ej. Imp, Sheriff)")]
+    public List<RoleType> rolesObligatorios; // Antes 'specialRoles'
+    [Tooltip("Roles para rellenar los huecos que falten")]
+    public List<RoleType> rolesRelleno;      // Antes 'fillerRoles'
 
+    [Header("Configuración Visual")]
+    [Range(0.1f, 1.5f)] public float escalaCarta = 0.4f; 
+    
     [Header("Forma de la Elipse")]
     public float radioX = 500f; 
     public float radioY = 150f; 
@@ -26,28 +33,57 @@ public class CardDealer : MonoBehaviour
 
     public void RepartirCartas()
     {
+        // 1. CHEQUEOS DE SEGURIDAD
         if (GameManager.Instance == null) return;
-        List<RoleVisualData> rolesDisponibles = GameManager.Instance.roleLibrary;
-        if (rolesDisponibles.Count == 0) return;
+        if (rolesRelleno.Count == 0) 
+        {
+            Debug.LogError("CardDealer: No has asignado 'Roles de Relleno' en el Inspector.");
+            return;
+        }
 
-        // Limpiar cartas previas
+        // Limpiar mesa anterior
         foreach (Transform child in contenedorCartas) Destroy(child.gameObject);
 
-        int totalCartas = 9;
-        GameManager.Instance.totalCardsInGame = totalCartas; 
+        // ---------------------------------------------------------
+        // 2. CONSTRUCCIÓN DEL MAZO (Lógica traída de LevelGenerator)
+        // ---------------------------------------------------------
+        List<RoleType> mazo = new List<RoleType>();
 
-        for (int i = 0; i < totalCartas; i++)
+        // A. Añadir obligatorios (1 de cada uno de la lista)
+        mazo.AddRange(rolesObligatorios);
+
+        // B. Rellenar hasta llegar al total
+        int huecosFaltantes = totalCartas - mazo.Count;
+        for (int i = 0; i < huecosFaltantes; i++)
         {
-            // 1. Crear
-            RoleVisualData data = rolesDisponibles[Random.Range(0, rolesDisponibles.Count)];
+            RoleType rolRandom = rolesRelleno[Random.Range(0, rolesRelleno.Count)];
+            mazo.Add(rolRandom);
+        }
+
+        // C. Barajar (Shuffle)
+        Barajar(mazo);
+
+        // Actualizar GameManager para el Sheriff
+        GameManager.Instance.totalCardsInGame = mazo.Count;
+
+        // ---------------------------------------------------------
+        // 3. INSTANCIACIÓN Y POSICIONAMIENTO (Lógica de CardDealer)
+        // ---------------------------------------------------------
+        for (int i = 0; i < mazo.Count; i++)
+        {
+            // A. Crear objeto
             GameObject nuevaCarta = Instantiate(prefabCarta, contenedorCartas);
             
-            // 2. Setup Lógica
+            // B. Setup Lógica (Usando el rol del mazo barajado)
             CardLogic logic = nuevaCarta.GetComponent<CardLogic>();
-            if (logic != null) logic.SetupCard(data.role, i + 1);
+            if (logic != null) 
+            {
+                // Pasamos el Rol Específico y su ID (1 al 9)
+                logic.SetupCard(mazo[i], i + 1);
+            }
 
-            // 3. Posición
-            float t = (float)i / (totalCartas - 1); 
+            // C. Posicionamiento Matemático
+            float t = (mazo.Count > 1) ? (float)i / (mazo.Count - 1) : 0.5f;
             float anguloRad = Mathf.Lerp(anguloInicio, anguloFin, t) * Mathf.Deg2Rad;
 
             float x = Mathf.Cos(anguloRad) * radioX + centroCirculo.x;
@@ -55,11 +91,23 @@ public class CardDealer : MonoBehaviour
 
             nuevaCarta.transform.localPosition = new Vector3(x, y, 0);
             
-            // 4. ESCALA Y ROTACIÓN (Aquí aplicamos el cambio)
-            nuevaCarta.transform.localScale = Vector3.one * escalaCarta; // Multiplica (1,1,1) por tu valor (ej. 0.4)
+            // D. Escala y Rotación
+            nuevaCarta.transform.localScale = Vector3.one * escalaCarta;
             nuevaCarta.transform.localRotation = Quaternion.identity;
             
-            nuevaCarta.name = $"Carta_{i + 1}";
+            nuevaCarta.name = $"Carta_{i + 1}_{mazo[i]}";
+        }
+    }
+
+    // Función auxiliar para barajar listas
+    void Barajar<T>(List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            T temp = list[i];
+            int randomIndex = Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
         }
     }
 }
