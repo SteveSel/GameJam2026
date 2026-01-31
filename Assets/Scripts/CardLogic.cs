@@ -21,27 +21,41 @@ public class CardLogic : MonoBehaviour
     public Button myButton;
 
     public void SetupCard(RoleType assignedRole, int newID)
+{
+    realRole = assignedRole;
+    cardID = newID;
+
+    // Protección 1: Texto ID
+    if (idText != null) idText.text = "#" + cardID.ToString();
+
+    // Lógica de disfraz
+    if (IsDemon(realRole)) disguisedRole = GetRandomVillagerRole();
+    else disguisedRole = realRole;
+
+    Sprite disguiseSprite = GameManager.Instance.GetSpriteForRole(disguisedRole);
+
+    // Protección 2: Icono del Rol (CRÍTICO)
+    if (roleIcon != null)
     {
-        realRole = assignedRole;
-        cardID = newID;
-
-        if (idText != null) idText.text = "#" + cardID.ToString();
-
-        if (IsDemon(realRole))
-        {
-            disguisedRole = GetRandomVillagerRole();
-        }
-        else
-        {
-            disguisedRole = realRole;
-        }
-
-        Sprite disguiseSprite = GameManager.Instance.GetSpriteForRole(disguisedRole);
         roleIcon.sprite = disguiseSprite;
-
-        backCover.SetActive(true);
-        isRevealed = false;
     }
+    else
+    {
+        Debug.LogError($"ERROR: La carta #{newID} no tiene asignado el 'Role Icon' en su Inspector.");
+    }
+
+    // Protección 3: Tapa trasera (CRÍTICO)
+    if (backCover != null)
+    {
+        backCover.SetActive(true);
+    }
+    else
+    {
+        Debug.LogError($"ERROR: La carta #{newID} no tiene asignado el 'Back Cover' en su Inspector.");
+    }
+        
+    isRevealed = false;
+}
 
     bool IsDemon(RoleType role)
     {
