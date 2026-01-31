@@ -5,13 +5,9 @@ using UnityEngine.UI;
 public enum RoleType
 {
     Imp,      
-    Lucifer,  
-    Mammon,
     Healer,   
     Investigator, 
-    Jester,
-    Scribe,
-    Queen
+    Scribe
 }
 
 public class LevelGenerator : MonoBehaviour
@@ -60,15 +56,24 @@ public class LevelGenerator : MonoBehaviour
 
         Shuffle(deck);
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.totalCardsInGame = deck.Count;
+        }
+
+        int currentID = 1;
+    
         foreach (RoleType role in deck)
         {
             GameObject newCardObj = Instantiate(cardPrefab, gridContainer);
 
             CardLogic cardScript = newCardObj.GetComponent<CardLogic>();
-            cardScript.SetupCard(role);
+
+            cardScript.SetupCard(role, currentID);
+
+            currentID++;
         }
     }
-
     void Shuffle<T>(List<T> list)
     {
         for (int i = 0; i < list.Count; i++)
