@@ -15,6 +15,8 @@ public class CardLogic : MonoBehaviour
     public bool isDead = false;
     public bool isUsed;
     public bool markedForDeath = false;
+    public bool isCorruptedByBeelzebub = false;
+    public bool isBlockedByBelphegor = false;
 
     [Header("Referencias UI")]
     public Image roleIcon;
@@ -51,12 +53,13 @@ public class CardLogic : MonoBehaviour
 
     bool IsDemon(RoleType role)
     {
-        return role == RoleType.Imp || role == RoleType.Lucifer || role == RoleType.Mammon || role == RoleType.Asmodeus;
+        return role == RoleType.Imp || role == RoleType.Lucifer || role == RoleType.Mammon || role == RoleType.Asmodeus
+            || role == RoleType.Satan || role == RoleType.Beelzebub || role == RoleType.Belphegor || role == RoleType.Leviathan;
     }
 
     public bool CheckIfCorrupted()
     {
-        if (IsDemon(realRole)) return true;
+        if (IsDemon(realRole) || isCorruptedByBeelzebub) return true;
 
         int leftID = GameManager.Instance.GetCircularID(cardID, -1);
         int rightID = GameManager.Instance.GetCircularID(cardID, 1);
@@ -95,6 +98,22 @@ public class CardLogic : MonoBehaviour
 
         Debug.Log("Has clicado en la carta #" + cardID + " que es realmente: " + realRole);
 
+        if (isBlockedByBelphegor)
+        {
+            if (CheckIfBelphegorIsAliveAround())
+            {
+                GameManager.Instance.LogInfo("Esta carta está sumida en la PEREZA (Bloqueada por Belphegor)...");
+                return;
+            }
+            else
+            {
+                isBlockedByBelphegor = false;
+                if (myButton != null) myButton.interactable = true;
+                if (roleIcon != null) roleIcon.color = Color.white;
+                GameManager.Instance.LogInfo("¡La influencia de Belphegor ha desaparecido!");
+            }
+        }
+
         if (GameManager.Instance.isInvestigating)
         {
             if (GameManager.Instance.currentInvestigator == this)
@@ -103,6 +122,13 @@ public class CardLogic : MonoBehaviour
                 GameManager.Instance.isInvestigating = false;
                 GameManager.Instance.currentInvestigator = null;
                 return;
+            }
+
+            if (realRole == RoleType.Satan && !isDead)
+            {
+                GameManager.Instance.playerLives--;
+                GameManager.Instance.LogInfo("¡Has tocado a SATANÁS! Te quemas la mano (-1 HP).");
+                GameManager.Instance.UpdateUI();
             }
 
             GameManager.Instance.ProcessInvestigationTarget(this);
@@ -117,6 +143,13 @@ public class CardLogic : MonoBehaviour
         }
         else
         {
+            if (realRole == RoleType.Satan)
+            {
+                GameManager.Instance.playerLives--;
+                GameManager.Instance.LogInfo("¡Has invocado a SATANÁS! (-1 HP).");
+                GameManager.Instance.UpdateUI();
+            }
+
             if (!isRevealed)
             {
                 RevealCard();
@@ -126,6 +159,20 @@ public class CardLogic : MonoBehaviour
                 if(!isUsed) UseAbility();
             }
         }
+    }
+
+    bool CheckIfBelphegorIsAliveAround()
+    {
+        int leftID = GameManager.Instance.GetCircularID(cardID, -1);
+        int rightID = GameManager.Instance.GetCircularID(cardID, 1);
+        int[] neighbors = { leftID, rightID };
+
+        foreach (int id in neighbors)
+        {
+            CardLogic n = GameManager.Instance.GetCardByID(id);
+            if (n != null && n.realRole == RoleType.Belphegor && !n.isDead) return true;
+        }
+        return false;
     }
 
     public void ExecuteThisCard()

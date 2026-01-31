@@ -327,12 +327,113 @@ public class GameManager : MonoBehaviour
         int count = 0;
         foreach (CardLogic card in allCards)
         {
-            if ((card.realRole == RoleType.Imp || card.realRole == RoleType.Lucifer || card.realRole == RoleType.Mammon || card.realRole == RoleType.Asmodeus) && !card.isDead)
+            if (card.realRole == RoleType.Imp || IsHighRankDemon(card.realRole))
             {
                 count++;
             }
         }
         return count;
+    }
+
+    bool IsDemon(RoleType role)
+    {
+        return role == RoleType.Imp || role == RoleType.Lucifer || role == RoleType.Mammon || role == RoleType.Asmodeus
+            || role == RoleType.Satan || role == RoleType.Beelzebub || role == RoleType.Belphegor || role == RoleType.Leviathan;
+    }
+
+    public void ApplyStartOfGameDemonEffects()
+    {
+        List<CardLogic> allCards = GetAllCards();
+
+        foreach (CardLogic card in allCards)
+        {
+
+            if (card.realRole == RoleType.Leviathan)
+            {
+                // Obtener IDs de ambos lados
+                int rightID = GetCircularID(card.cardID, 1);
+                int leftID = GetCircularID(card.cardID, -1);
+
+                // Obtener las cartas
+                CardLogic rightNeighbor = GetCardByID(rightID);
+                CardLogic leftNeighbor = GetCardByID(leftID);
+
+                // Meter en una lista los candidatos que existan
+                List<CardLogic> candidates = new List<CardLogic>();
+                if (rightNeighbor != null) candidates.Add(rightNeighbor);
+                if (leftNeighbor != null) candidates.Add(leftNeighbor);
+
+                // Elegir uno al azar
+                if (candidates.Count > 0)
+                {
+                    CardLogic chosenNeighbor = candidates[Random.Range(0, candidates.Count)];
+
+                    // Copia el disfraz visual y lógico
+                    card.disguisedRole = chosenNeighbor.disguisedRole;
+
+                    // Actualiza el sprite
+                    Sprite newSprite = GetSpriteForRole(card.disguisedRole);
+                    if (card.roleIcon != null) card.roleIcon.sprite = newSprite;
+
+                    // Debug
+                    Debug.Log($"Leviathan (#{card.cardID}) ha copiado a #{chosenNeighbor.cardID} ({card.disguisedRole})");
+                }
+            }
+
+            if (card.realRole == RoleType.Belphegor)
+            {
+                int leftID = GetCircularID(card.cardID, -1);
+                int rightID = GetCircularID(card.cardID, 1);
+
+                CardLogic leftNeighbor = GetCardByID(leftID);
+                CardLogic rightNeighbor = GetCardByID(rightID);
+
+                List<CardLogic> validVictims = new List<CardLogic>();
+
+                if (leftNeighbor != null && !IsDemon(leftNeighbor.realRole))
+                {
+                    validVictims.Add(leftNeighbor);
+                }
+                if (rightNeighbor != null && !IsDemon(rightNeighbor.realRole))
+                {
+                    validVictims.Add(rightNeighbor);
+                }
+
+                if (validVictims.Count > 0)
+                {
+                    CardLogic victim = validVictims[Random.Range(0, validVictims.Count)];
+
+                    victim.isBlockedByBelphegor = true;
+
+                    if (victim.roleIcon != null) victim.roleIcon.color = new Color(0.7f, 0.7f, 0.9f);
+
+                    Debug.Log($"Belphegor (#{card.cardID}) ha dormido a la carta #{victim.cardID}");
+                }
+                else
+                {
+                    Debug.Log($"Belphegor (#{card.cardID}) está rodeado de demonios y no puede bloquear a nadie.");
+                }
+            }
+        }
+
+        bool beelzebubExists = false;
+        foreach (var c in allCards) { if (c.realRole == RoleType.Beelzebub) beelzebubExists = true; }
+
+        if (beelzebubExists)
+        {
+            List<CardLogic> potentialVictims = new List<CardLogic>();
+            foreach (var c in allCards)
+            {
+                if (!IsDemon(c.realRole)) potentialVictims.Add(c);
+            }
+
+            if (potentialVictims.Count > 0)
+            {
+                CardLogic corruptedOne = potentialVictims[Random.Range(0, potentialVictims.Count)];
+                corruptedOne.isCorruptedByBeelzebub = true;
+                Debug.Log($"Beelzebub ha corrompido a la carta #{corruptedOne.cardID}");
+            }
+        }
     }
 
     public void CheckWinCondition()
@@ -369,7 +470,8 @@ public class GameManager : MonoBehaviour
 
     public bool IsHighRankDemon(RoleType role)
     {
-        return role == RoleType.Lucifer || role == RoleType.Mammon || role == RoleType.Asmodeus;
+        return role == RoleType.Lucifer || role == RoleType.Mammon || role == RoleType.Asmodeus || 
+            role == RoleType.Satan || role == RoleType.Beelzebub || role == RoleType.Belphegor || role == RoleType.Leviathan; ;
     }
 
     public List<CardLogic> GetAllCards()
@@ -539,5 +641,9 @@ public enum RoleType
     Imp,
     Lucifer,
     Mammon,
-    Asmodeus
+    Asmodeus,
+    Satan,
+    Beelzebub,
+    Belphegor,
+    Leviathan
 }
