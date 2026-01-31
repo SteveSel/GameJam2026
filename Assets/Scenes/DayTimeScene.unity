@@ -191,10 +191,18 @@ MonoBehaviour:
   playerLives: 3
   maxLives: 3
   totalCardsInGame: 9
+  isGameOver: 0
+  isExecutionMode: 0
   apText: {fileID: 0}
   livesText: {fileID: 0}
+  executionButtonImage: {fileID: 0}
   infoLog: {fileID: 0}
-  nextDayButton: {fileID: 0}
+  bigMessageText: {fileID: 0}
+  bigMessageCanvasGroup: {fileID: 0}
+  messageDuration: 2
+  fadePanel: {fileID: 0}
+  backgroundAnimator: {fileID: 0}
+  fadeDuration: 1
 --- !u!4 &1173044081
 Transform:
   m_ObjectHideFlags: 0

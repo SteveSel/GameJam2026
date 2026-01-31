@@ -277,7 +277,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -4240579064829935649, guid: f154f7f58e85b9449a5a6c219233995c, type: 3}
+  m_Sprite: {fileID: -4264029087578421448, guid: 5eaa902ec37cab98b9ff417600f20e6e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -491,7 +491,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -4240579064829935649, guid: f154f7f58e85b9449a5a6c219233995c, type: 3}
+  m_Sprite: {fileID: -4264029087578421448, guid: 5eaa902ec37cab98b9ff417600f20e6e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -574,6 +574,7 @@ MonoBehaviour:
   cardID: 0
   isRevealed: 0
   isDead: 0
+  isUsed: 0
   roleIcon: {fileID: 4987546607748983129}
   backCover: {fileID: 3248409773889329133}
   idText: {fileID: 4298278382889925067}
