@@ -17,7 +17,6 @@ public class CardLogic : MonoBehaviour
     public Image roleIcon;
     public GameObject backCover;
     public TextMeshProUGUI idText;
-
     public Button myButton;
 
     public void SetupCard(RoleType assignedRole, int newID)
@@ -25,16 +24,13 @@ public class CardLogic : MonoBehaviour
     realRole = assignedRole;
     cardID = newID;
 
-    // Protección 1: Texto ID
     if (idText != null) idText.text = "#" + cardID.ToString();
 
-    // Lógica de disfraz
     if (IsDemon(realRole)) disguisedRole = GetRandomVillagerRole();
     else disguisedRole = realRole;
 
     Sprite disguiseSprite = GameManager.Instance.GetSpriteForRole(disguisedRole);
 
-    // Protección 2: Icono del Rol (CRÍTICO)
     if (roleIcon != null)
     {
         roleIcon.sprite = disguiseSprite;
@@ -44,7 +40,6 @@ public class CardLogic : MonoBehaviour
         Debug.LogError($"ERROR: La carta #{newID} no tiene asignado el 'Role Icon' en su Inspector.");
     }
 
-    // Protección 3: Tapa trasera (CRÍTICO)
     if (backCover != null)
     {
         backCover.SetActive(true);
@@ -55,6 +50,8 @@ public class CardLogic : MonoBehaviour
     }
         
     isRevealed = false;
+    isDead = false;
+    if (myButton != null) myButton.image.color = Color.white;
 }
 
     bool IsDemon(RoleType role)
@@ -76,27 +73,58 @@ public class CardLogic : MonoBehaviour
 
         if (isDead || GameManager.Instance.currentAP <= 0) return;
 
-        if (!isRevealed)
+        if (GameManager.Instance.isExecutionMode)
         {
-            RevealCard();
+            ExecuteThisCard();
         }
         else
         {
-            UseAbility();
+            if (!isRevealed)
+            {
+                RevealCard();
+            }
+            else
+            {
+                UseAbility();
+            }
+
         }
+    }
+
+    void ExecuteThisCard()
+    {
+        isDead = true;
+        isRevealed = true;
+        backCover.SetActive(false);
+
+        //Gris = muerto
+        myButton.image.color = Color.gray;
+        roleIcon.color = Color.gray;
+
+        if (IsDemon(realRole))
+        {
+            GameManager.Instance.LogInfo($"¡JUSTICE! You executed card #{cardID}. IT WAS A DEMON.");
+        }
+        else
+        {
+            GameManager.Instance.playerLives -= 2;
+            GameManager.Instance.LogInfo($"¡ERROR! You executed card #{cardID}. IT WAS INNOCENT");
+        }
+        GameManager.Instance.UpdateUI();
+        GameManager.Instance.ToggleExecutionMode();
 
     }
 
-    void RevealCard()
+    public void RevealCard()
     {
         isRevealed = true;
         backCover.SetActive(false); // Se ve el disguisedRole
         GameManager.Instance.UseAP(1);
-
-        GameManager.Instance.LogInfo("Has revelado una carta. Parece un " + disguisedRole);
+        Debug.Log($"Revealed card #{cardID}, it is a {disguisedRole}");
+        GameManager.Instance.LogInfo($"You revealed card #{cardID}. It seems a {disguisedRole}");
     }
 
-    void UseAbility()
+    public void UseAbility()
     {
         GameManager.Instance.UseAP(1);
 
@@ -130,6 +158,7 @@ public class CardLogic : MonoBehaviour
             GameManager.Instance.playerLives++;
             GameManager.Instance.LogInfo("¡¡Usaste el healer y te sumó 1HP!!");
         }
+        GameManager.Instance.UpdateUI();
     }
 
     void TryToCountDemons()
