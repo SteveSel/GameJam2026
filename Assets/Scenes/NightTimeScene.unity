@@ -185,7 +185,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 4236982038689555634, guid: 42298a7f89dbb82c488cacd982b88ff2, type: 3}
+  m_Sprite: {fileID: -3488452835267070268, guid: 52ae24909931f16f6b47235dcb7927c0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -508,28 +508,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   roleLibrary:
   - role: 0
-    artwork: {fileID: 0}
+    artwork: {fileID: -7214644234435044250, guid: 6bdb73e8844b260aeb156e2d6cec4586, type: 3}
     description: 
   - role: 1
-    artwork: {fileID: 0}
+    artwork: {fileID: 2126677345416845169, guid: 9aa3fc37b5bb1a32dbfeb8d29e5c7248, type: 3}
     description: 
   - role: 2
-    artwork: {fileID: 0}
+    artwork: {fileID: 724864799280191546, guid: bf4cbde75ed4f399b92433108158b0e0, type: 3}
     description: 
   - role: 3
-    artwork: {fileID: 0}
-    description: 
-  - role: 4
-    artwork: {fileID: 0}
-    description: 
-  - role: 5
-    artwork: {fileID: 0}
-    description: 
-  - role: 6
-    artwork: {fileID: 0}
-    description: 
-  - role: 7
-    artwork: {fileID: 0}
+    artwork: {fileID: -1300040099423329597, guid: 6624f0a3a31673be6a443041fc253933, type: 3}
     description: 
   currentAP: 3
   maxAP: 3
@@ -552,6 +540,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardDealer
   prefabCarta: {fileID: 6085568935885337069, guid: c68babee7ed2c55489bd46beb9b0cb0d, type: 3}
   contenedorCartas: {fileID: 228696476}
+  totalCartas: 9
+  rolesObligatorios: 
+  rolesRelleno: 
   escalaCarta: 0.18
   radioX: 300
   radioY: 180
