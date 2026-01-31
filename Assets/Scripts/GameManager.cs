@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
     public bool isExecutionMode = false;
     private bool isTransitioning = false;
 
+    public bool isInvestigating = false;
+    public CardLogic currentInvestigator;
+
     [Header("UI References")]
     public TextMeshProUGUI apText;
     public TextMeshProUGUI livesText;
@@ -53,6 +56,11 @@ public class GameManager : MonoBehaviour
     public CanvasGroup fadePanel;
     public Animator backgroundAnimator;
     public float fadeDuration = 1.0f;
+
+    [Header("Game Over UI")]
+    public GameObject gameOverPanel ;
+    public TextMeshProUGUI resultTitle ;
+    public TextMeshProUGUI statsSummary ;
 
     // Variable para controlar la corrutina de texto y que no se solapen bruscamente
     private Coroutine currentMessageRoutine;
@@ -210,10 +218,55 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        // ---------------------------------------------
-        // FASE 3: ESPERA DE 2 SEGUNDOS (El jugador mira, no toca)
-        // ---------------------------------------------
-        yield return new WaitForSeconds(2.0f); 
+        yield return new WaitForSeconds(2.0f);
+
+        List<CardLogic> huntersToDie = new List<CardLogic>();
+        foreach (var c in GetAllCards())
+        {
+            if (c.markedForDeath && !c.isDead) huntersToDie.Add(c);
+        }
+
+        foreach (var h in huntersToDie)
+        {
+            LogInfo($"NOCHE: El Hunter (#{h.cardID}) ha sucumbido a la culpa.");
+            h.DieSilently();
+        }
+
+        // MAMMON
+        int mammonCount = CountSpecificRoleAlive(RoleType.Mammon);
+        int apPenalty = (mammonCount > 0) ? 1 : 0;
+        if (apPenalty > 0) LogInfo("NOCHE: Mammon te ha robado energía... (-1 AP mañana)");
+
+        // LUCIFER
+        int luciferCount = CountSpecificRoleAlive(RoleType.Lucifer);
+
+        if (luciferCount > 0)
+        {
+            // Buscar víctimas posibles
+            List<CardLogic> victims = new List<CardLogic>();
+            CardLogic[] allCards = FindObjectsByType<CardLogic>(FindObjectsSortMode.None);
+
+            foreach (var c in allCards)
+            {
+                if (!IsHighRankDemon(c.realRole) && c.realRole != RoleType.Imp && !c.isDead)
+                {
+                    victims.Add(c);
+                }
+            }
+
+            if (victims.Count > 0)
+            {
+                // Elegir y Matar
+                CardLogic target = victims[Random.Range(0, victims.Count)];
+
+                target.DieSilently();
+                playerLives -= 2;
+
+                LogInfo($"NOCHE: ¡Lucifer ha sacrificado a la carta #{target.cardID} ({target.realRole})! Pierdes 2 HP.");
+            }
+        }
+
+        yield return new WaitForSeconds(2.0f);
 
         // --- FASE 4: AMANECER ---
         timer = 0f;
@@ -229,7 +282,7 @@ public class GameManager : MonoBehaviour
         if (backgroundAnimator != null) backgroundAnimator.SetBool("esNoche", false);
         
         dayCount++; // Subimos el contador
-        currentAP = maxAP; 
+        currentAP = maxAP - apPenalty; 
         UpdateUI();
         
         // <--- MOSTRAMOS EL TEXTO DE NUEVO DÍA --->
@@ -273,7 +326,7 @@ public class GameManager : MonoBehaviour
         int count = 0;
         foreach (CardLogic card in allCards)
         {
-            if (card.realRole == RoleType.Imp && !card.isDead)
+            if ((card.realRole == RoleType.Imp || card.realRole == RoleType.Lucifer || card.realRole == RoleType.Mammon || card.realRole == RoleType.Asmodeus) && !card.isDead)
             {
                 count++;
             }
@@ -297,14 +350,138 @@ public class GameManager : MonoBehaviour
 
         if (executionButtonImage != null) executionButtonImage.gameObject.SetActive(false);
 
-        if (victory)
+        if (gameOverPanel != null) {
+            gameOverPanel.SetActive(true);
+        
+            if (resultTitle != null) {
+                resultTitle.text = victory ? "¡VICTORIA!" : "DERROTA...";
+                resultTitle.color = victory ? Color.green : Color.red;
+            }
+            if (statsSummary != null) {
+                // Aquí puedes añadir más estadísticas si lo deseas
+                statsSummary.text = $"Días sobrevividos: {dayCount}\n";
+            }
+        }
+        if (victory) LogInfo("¡Has eliminado a todos los demonios!"); 
+        else LogInfo("Has perdido todas tus vidas...");
+    }
+
+    public bool IsHighRankDemon(RoleType role)
+    {
+        return role == RoleType.Lucifer || role == RoleType.Mammon || role == RoleType.Asmodeus;
+    }
+
+    public List<CardLogic> GetAllCards()
+    { 
+        return new List<CardLogic>(FindObjectsByType<CardLogic>(FindObjectsSortMode.None));
+    }
+
+    public void StartInvestigation(CardLogic investigatorCard)
+    {
+        if (currentAP <= 0) return;
+
+        isInvestigating = true;
+        currentInvestigator = investigatorCard;
+
+        LogInfo($"(#{investigatorCard.cardID}): 'Dime a quién selecciono...' (Haz clic en otra carta)");
+    }
+
+    public void ProcessInvestigationTarget(CardLogic targetCard)
+    {
+        UseAP(1);
+
+        if (currentInvestigator != null)
         {
-            LogInfo("¡VICTORY! You killed all demons.");
+            currentInvestigator.isUsed = true;
+        }
+
+        RoleType roleAction = currentInvestigator.disguisedRole;
+        bool amILying = currentInvestigator.CheckIfCorrupted();
+
+        switch (roleAction)
+        {
+            case RoleType.Investigator:
+                bool targetIsDemon = (targetCard.realRole == RoleType.Imp || IsHighRankDemon(targetCard.realRole));
+                string veredicto = "";
+
+                if (amILying) veredicto = targetIsDemon ? "HUMANO" : "DEMONIO";
+                else veredicto = targetIsDemon ? "DEMONIO" : "HUMANO";
+
+                LogInfo($"Investigator: 'He interrogado a #{targetCard.cardID}... es {veredicto}.'");
+                break;
+
+            case RoleType.Diplomat:
+
+                bool targetSideIsDemon = (targetCard.realRole == RoleType.Imp || IsHighRankDemon(targetCard.realRole));
+                bool sameTeam = !targetSideIsDemon; // Si target NO es demonio, somos del mismo equipo (Villagers)
+
+                if (amILying) sameTeam = !sameTeam; // Miente sobre el resultado
+
+                string msgDiplomat = sameTeam ? "SOMOS ALIADOS" : "SOMOS ENEMIGOS";
+                LogInfo($"Diplomat: 'He analizado a #{targetCard.cardID}... {msgDiplomat}.'");
+                break;
+
+            case RoleType.Hunter:
+                HandleHunterShot(targetCard, amILying);
+                break;
+        }
+
+        isInvestigating = false;
+        currentInvestigator = null;
+    }
+
+    void HandleHunterShot(CardLogic target, bool isFakeHunter)
+    {
+        if (isFakeHunter)
+        {
+            List<CardLogic> victims = new List<CardLogic>();
+            foreach (var c in GetAllCards())
+            {
+                if (!IsHighRankDemon(c.realRole) && c.realRole != RoleType.Imp && !c.isDead)
+                    victims.Add(c);
+            }
+
+            if (victims.Count > 0)
+            {
+                CardLogic randomVictim = victims[Random.Range(0, victims.Count)];
+                LogInfo($"Hunter: '¡Ups! Se me escapó el tiro...'");
+                randomVictim.ExecuteThisCard();
+            }
         }
         else
         {
-            LogInfo("DEFEAT... You ran out of HP.");
+            bool targetIsDemon = (target.realRole == RoleType.Imp || IsHighRankDemon(target.realRole));
+
+            if (targetIsDemon)
+            {
+                LogInfo($"Hunter: '¡Tiro certero! #{target.cardID} era un demonio.'");
+                target.ExecuteThisCard();
+                ToggleExecutionMode();
+            }
+            else
+            {
+                LogInfo($"Hunter: '¡He disparado a un inocente! (#{target.cardID}). Me siento fatal...'");
+                target.ExecuteThisCard();
+                ToggleExecutionMode();
+                playerLives -= 1;
+                playerLives -= 1;
+                UpdateUI();
+
+                // El Hunter muere mañana
+                currentInvestigator.markedForDeath = true;
+            }
         }
+    }
+
+    public int CountSpecificRoleAlive(RoleType role)
+    {
+        CardLogic[] allCards = FindObjectsByType<CardLogic>(FindObjectsSortMode.None);
+        int count = 0;
+        foreach (CardLogic c in allCards)
+        {
+            if (c.realRole == role && !c.isDead) count++;
+        }
+        return count;
     }
 
     public int CountRealDemons()
@@ -313,16 +490,41 @@ public class GameManager : MonoBehaviour
         int count = 0;
         foreach (CardLogic card in allCards)
         {
-            if (card.realRole == RoleType.Imp) count++;
+            if (card.realRole == RoleType.Imp  || IsHighRankDemon(card.realRole)) count++;
         }
         return count;
     }
+
+    public int GetCircularID(int currentID, int offset)
+    {
+        int zeroBasedIndex = currentID - 1;
+
+        int targetIndex = zeroBasedIndex + offset;
+
+        int wrappedIndex = (targetIndex % totalCardsInGame + totalCardsInGame) % totalCardsInGame;
+
+        return wrappedIndex + 1;
+    }
+
 }
 
 public enum RoleType
 {
-    Imp,
+    // Villagers
     Healer,
     Scribe,
-    Investigator
+    Investigator,
+    Queen,
+    Medium,
+    Monk,
+    Gravekeeper,
+    Hunter,
+    Diplomat,
+    Torchbearer,
+
+    // Demons
+    Imp,
+    Lucifer,
+    Mammon,
+    Asmodeus
 }

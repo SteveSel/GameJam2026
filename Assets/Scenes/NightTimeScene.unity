@@ -743,25 +743,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   roleLibrary:
   - role: 0
-    artwork: {fileID: 1704136824156536098, guid: 33b3b79346ba29e4c91559eb92d33da2, type: 3}
+    artwork: {fileID: -3152180383845805149, guid: 4d57e2eed655ca0b6be68ef7bbd1aee5, type: 3}
     description: 
   - role: 1
-    artwork: {fileID: -3152180383845805149, guid: 1f7332afddecd784f89a77d52b8fdc90, type: 3}
+    artwork: {fileID: 2752675982035780481, guid: 0850959b8758b6a45b476613bdb58ee3, type: 3}
     description: 
   - role: 2
-    artwork: {fileID: 2752675982035780481, guid: 9bca24df1dd32ea4bae9f2026016b0e5, type: 3}
+    artwork: {fileID: -3333213965643037966, guid: 4af413528295ef142925c24052bdb931, type: 3}
+    description: 
+  - role: 5
+    artwork: {fileID: 750404815526784723, guid: 9fbc37a82a3804c46a0bba9875f05519, type: 3}
+    description: 
+  - role: 10
+    artwork: {fileID: 1704136824156536098, guid: 33b3b79346ba29e4c91559eb92d33da2, type: 3}
+    description: 
+  - role: 6
+    artwork: {fileID: -3284151758808637668, guid: f65735f61fe9e694b835ea505e363460, type: 3}
     description: 
   - role: 3
-    artwork: {fileID: -3333213965643037966, guid: 4af413528295ef142925c24052bdb931, type: 3}
+    artwork: {fileID: 7519753400087680208, guid: 448441ff58b9e27429a0679a04aae6b1, type: 3}
+    description: 
+  - role: 4
+    artwork: {fileID: -8992919794962309687, guid: 6a47f1a558e75385e8ef28c6a68f2481, type: 3}
+    description: 
+  - role: 11
+    artwork: {fileID: -2733091375452412341, guid: 7144f4932d259944b9ee0f8def8f3aab, type: 3}
+    description: 
+  - role: 12
+    artwork: {fileID: -3605803343856799445, guid: d0f600d0911494e4aa99ccf431b96110, type: 3}
+    description: 
+  - role: 13
+    artwork: {fileID: 5145732429435563472, guid: b82ade1c843984b468b61b4fd2683e2f, type: 3}
+    description: 
+  - role: 9
+    artwork: {fileID: -8908780133868294025, guid: 03d3b899aba4f4a4abe937f7ff5e1a68, type: 3}
+    description: 
+  - role: 8
+    artwork: {fileID: 927866858764168377, guid: a58092f47b8b858438c8a1204c459797, type: 3}
+    description: 
+  - role: 7
+    artwork: {fileID: -3085747607584028519, guid: 76347f3c94162211580238d2bc7ea832, type: 3}
     description: 
   currentPhase: 0
   dayCount: 1
-  currentAP: 3
-  maxAP: 3
-  playerLives: 3
-  maxLives: 3
+  currentAP: 5
+  maxAP: 5
+  playerLives: 5
+  maxLives: 5
   totalCardsInGame: 9
+  isGameOver: 0
   isExecutionMode: 0
+  isInvestigating: 0
+  currentInvestigator: {fileID: 0}
   apText: {fileID: 1737718372}
   livesText: {fileID: 1463590926}
   executionButtonImage: {fileID: 1517317878}
@@ -787,8 +820,8 @@ MonoBehaviour:
   prefabCarta: {fileID: 6085568935885337069, guid: 5edc726d3697f5f4eb433db99508601a, type: 3}
   contenedorCartas: {fileID: 228696476}
   totalCartas: 8
-  rolesObligatorios: 0000000000000000020000000300000001000000
-  rolesRelleno: 010000000200000003000000
+  rolesObligatorios: 090000000a0000000700000008000000
+  rolesRelleno: 02000000040000000600000000000000010000000300000005000000
   escalaCarta: 0.18
   radioX: 300
   radioY: 180
@@ -905,7 +938,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -182.99988, y: 33.00001}
+  m_AnchoredPosition: {x: -182.99988, y: 33.000015}
   m_SizeDelta: {x: 183, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &696475602
@@ -1248,7 +1281,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 644613041}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.9999998
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
