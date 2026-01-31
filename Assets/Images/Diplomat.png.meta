@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f154f7f58e85b9449a5a6c219233995c
+guid: a58092f47b8b858438c8a1204c459797
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4240579064829935649
-    second: Card Back_0
+      213: 927866858764168377
+    second: Diplomat_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Card Back_0
+      name: Diplomat_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fdf7adedecf6625c0800000000000000
-      internalID: -4240579064829935649
+      spriteID: 9bcee73fdf170ec00800000000000000
+      internalID: 927866858764168377
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Card Back_0: -4240579064829935649
+      Diplomat_0: 927866858764168377
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
