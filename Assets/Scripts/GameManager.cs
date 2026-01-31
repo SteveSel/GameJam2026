@@ -123,12 +123,15 @@ public class GameManager : MonoBehaviour
     
     IEnumerator TransitionToNightRoutine()
     {
+        // BLOQUEO TOTAL AL JUGADOR
         isTransitioning = true;
+        if (fadePanel != null) fadePanel.blocksRaycasts = true; 
+
         LogInfo("Cae la noche...");
 
-        if (fadePanel != null) fadePanel.blocksRaycasts = true;
-
-        // 1. FADE OUT (Pantalla negra)
+        // ---------------------------------------------
+        // FASE 1: IR A DORMIR (Día -> Negro)
+        // ---------------------------------------------
         float timer = 0f;
         while (timer < fadeDuration)
         {
@@ -138,22 +141,53 @@ public class GameManager : MonoBehaviour
         }
         if (fadePanel != null) fadePanel.alpha = 1f;
 
-        // 2. CAMBIO DE ESTADO EN EL ANIMATOR (Pantalla en negro)
-        yield return new WaitForSeconds(0.2f); 
+        // CAMBIO VISUAL A NOCHE
+        if (backgroundAnimator != null) backgroundAnimator.SetBool("esNoche", true);
         
-        // <--- AQUÍ ESTÁ EL CAMBIO PRINCIPAL --->
-        if (backgroundAnimator != null)
-        {
-            // Activamos el booleano que configuramos en el paso 3
-            backgroundAnimator.SetBool("esNoche", true);
-        }
-        else
-        {
-            Debug.LogWarning("ERROR: No has asignado el 'Background Animator' en el Inspector del GameManager.");
-        }
-        // <------------------------------------->
+        yield return new WaitForSeconds(0.5f); // Pequeña pausa en negro total
 
-        // 3. FADE IN (Vuelve la imagen y ya estará reproduciéndose la animación)
+        // ---------------------------------------------
+        // FASE 2: MOSTRAR LA NOCHE (Negro -> Noche visible)
+        // ---------------------------------------------
+        timer = 0f;
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            if (fadePanel != null) fadePanel.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+            yield return null;
+        }
+
+        // ---------------------------------------------
+        // FASE 3: ESPERA DE 5 SEGUNDOS (El jugador mira, no toca)
+        // ---------------------------------------------
+        LogInfo("Es de noche... Los demonios acechan.");
+        yield return new WaitForSeconds(5.0f); 
+
+        // ---------------------------------------------
+        // FASE 4: AMANECER (Noche -> Negro)
+        // ---------------------------------------------
+        timer = 0f;
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            if (fadePanel != null) fadePanel.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+            yield return null;
+        }
+        if (fadePanel != null) fadePanel.alpha = 1f;
+
+        // CAMBIO VISUAL A DÍA y RESET DE JUEGO
+        if (backgroundAnimator != null) backgroundAnimator.SetBool("esNoche", false);
+        
+        // ¡IMPORTANTE! RECUPERAR LOS PUNTOS DE ACCIÓN (AP)
+        currentAP = maxAP; 
+        UpdateUI();
+        LogInfo("Amanece un nuevo día.");
+
+        yield return new WaitForSeconds(0.5f); // Pequeña pausa en negro total
+
+        // ---------------------------------------------
+        // FASE 5: VOLVER A JUGAR (Negro -> Día visible)
+        // ---------------------------------------------
         timer = 0f;
         while (timer < fadeDuration)
         {
@@ -162,6 +196,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         
+        // DESBLOQUEO DEL JUGADOR
         if (fadePanel != null) 
         {
             fadePanel.alpha = 0f;
@@ -169,7 +204,6 @@ public class GameManager : MonoBehaviour
         }
 
         isTransitioning = false;
-        LogInfo("Es de noche. Ten cuidado.");
     }
 
     public void UpdateUI()
