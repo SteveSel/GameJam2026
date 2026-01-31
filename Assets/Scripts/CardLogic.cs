@@ -109,12 +109,12 @@ public class CardLogic : MonoBehaviour
         if (IsDemon(realRole))
         {
             GameManager.Instance.playerLives--;
-            GameManager.Instance.LogInfo("¡¡Usaste el healer y te quitó 1HP!!");
+            GameManager.Instance.LogInfo("Â¡Â¡Usaste el healer y te quitÃ³ 1HP!!");
         }
         else
         {
             GameManager.Instance.playerLives++;
-            GameManager.Instance.LogInfo("¡¡Usaste el healer y te sumó 1HP!!");
+            GameManager.Instance.LogInfo("Â¡Â¡Usaste el healer y te sumÃ³ 1HP!!");
         }
     }
 
