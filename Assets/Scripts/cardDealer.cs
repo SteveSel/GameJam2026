@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class CardDealer : MonoBehaviour
@@ -102,8 +103,21 @@ public class CardDealer : MonoBehaviour
             
             nuevaCarta.name = $"Carta_{i + 1}_{mazo[i]}";
         }
-    }
 
+        StartCoroutine(InitDemonsRoutine());
+
+       
+    }
+    
+    IEnumerator InitDemonsRoutine()
+            {
+                yield return null; // Espera 1 frame
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.ApplyStartOfGameDemonEffects();
+                }
+            }
+    
     // Función auxiliar para barajar listas
     void Barajar<T>(List<T> list)
     {

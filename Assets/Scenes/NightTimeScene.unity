@@ -882,6 +882,18 @@ MonoBehaviour:
   - role: 7
     artwork: {fileID: -3085747607584028519, guid: 76347f3c94162211580238d2bc7ea832, type: 3}
     description: 
+  - role: 14
+    artwork: {fileID: 9003334318632265062, guid: a0f0d90d4bac38a488df26bc7ddd41c8, type: 3}
+    description: 
+  - role: 15
+    artwork: {fileID: 1275850114679104370, guid: 23be6021a52997849a1afaf9c0b1ef1c, type: 3}
+    description: 
+  - role: 16
+    artwork: {fileID: -9052410680947241596, guid: e2af2166782eccc49bbc7ee586b83176, type: 3}
+    description: 
+  - role: 17
+    artwork: {fileID: -8808785127103365754, guid: 695b448c39fdbca47baa5ee08304241b, type: 3}
+    description: 
   currentPhase: 0
   dayCount: 1
   currentAP: 5
