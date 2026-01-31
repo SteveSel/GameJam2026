@@ -339,12 +339,7 @@ public class GameManager : MonoBehaviour
         return count;
     }
 
-    // Call this from your Restart Button in the UI
-    public void RestartGame()
-    {
-        // Reloads the current active scene
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+ 
 }
 
 public enum RoleType
