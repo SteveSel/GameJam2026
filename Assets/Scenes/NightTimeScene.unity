@@ -784,13 +784,25 @@ MonoBehaviour:
   - role: 7
     artwork: {fileID: -3085747607584028519, guid: 76347f3c94162211580238d2bc7ea832, type: 3}
     description: 
+  - role: 14
+    artwork: {fileID: 9003334318632265062, guid: a0f0d90d4bac38a488df26bc7ddd41c8, type: 3}
+    description: 
+  - role: 15
+    artwork: {fileID: 1275850114679104370, guid: 23be6021a52997849a1afaf9c0b1ef1c, type: 3}
+    description: 
+  - role: 16
+    artwork: {fileID: -9052410680947241596, guid: e2af2166782eccc49bbc7ee586b83176, type: 3}
+    description: 
+  - role: 17
+    artwork: {fileID: -8808785127103365754, guid: 695b448c39fdbca47baa5ee08304241b, type: 3}
+    description: 
   currentPhase: 0
   dayCount: 1
   currentAP: 5
   maxAP: 5
   playerLives: 5
   maxLives: 5
-  totalCardsInGame: 3
+  totalCardsInGame: 5
   isGameOver: 0
   isExecutionMode: 0
   isInvestigating: 0
@@ -823,8 +835,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardDealer
   prefabCarta: {fileID: 6085568935885337069, guid: 5edc726d3697f5f4eb433db99508601a, type: 3}
   contenedorCartas: {fileID: 228696476}
-  totalCartas: 3
-  rolesObligatorios: 090000000b00000008000000
+  totalCartas: 5
+  rolesObligatorios: 100000000f000000110000000e00000002000000
   rolesRelleno: 02000000040000000600000000000000010000000300000005000000090000000700000008000000
   escalaCarta: 0.18
   radioX: 300
@@ -1871,7 +1883,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7063982}
   m_HandleRect: {fileID: 7063981}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
