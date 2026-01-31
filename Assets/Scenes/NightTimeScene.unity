@@ -659,12 +659,12 @@ MonoBehaviour:
   currentAP: 3
   maxAP: 3
   playerLives: 3
-  totalCardsInGame: 9
+  totalCardsInGame: 8
   isExecutionMode: 0
   apText: {fileID: 1737718372}
   livesText: {fileID: 1463590926}
   executionButtonImage: {fileID: 1517317878}
-  infoLog: {fileID: 0}
+  infoLog: {fileID: 161611584}
 --- !u!114 &560755282
 MonoBehaviour:
   m_ObjectHideFlags: 0

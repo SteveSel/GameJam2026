@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.UI;   
+using UnityEngine.UI;
+using System.Collections; // Necesario para IEnumerator
 using System.Collections.Generic;
 using TMPro;
 
@@ -15,7 +16,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [Header("Configuraci�n de Roles")]
+    [Header("Configuración de Roles")]
     public List<RoleVisualData> roleLibrary; 
 
     [Header("Estado del Juego")]
@@ -25,19 +26,23 @@ public class GameManager : MonoBehaviour
     public int totalCardsInGame = 9;
 
     public bool isExecutionMode = false;
+    private bool isTransitioning = false; // Para evitar clics durante el cambio
 
     [Header("UI References")]
     public TextMeshProUGUI apText;
     public TextMeshProUGUI livesText;
-
     public Image executionButtonImage;
-
-    [Header("UI Textos")]
     public TextMeshProUGUI infoLog;
+
+    [Header("Transición Día/Noche")]
+    public CanvasGroup fadePanel;          // Arrastra aquí el panel negro con CanvasGroup
+    public SpriteRenderer backgroundObject; // Arrastra aquí el objeto del fondo
+    public Sprite nightSprite;             // Arrastra aquí la imagen 'nightTimescene'
+    public float fadeDuration = 1.0f;      // Tiempo que tarda en oscurecerse
 
     public void LogInfo(string message)
     {
-        infoLog.text = message;
+        if (infoLog != null) infoLog.text = message;
     }
 
     void Awake()
@@ -48,12 +53,18 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         UpdateUI();
+        // Aseguramos que el panel empieza transparente
+        if (fadePanel != null) 
+        {
+            fadePanel.alpha = 0;
+            fadePanel.blocksRaycasts = false;
+        }
     }
 
-
-    // Funci�n para el bot�n de matar
     public void ToggleExecutionMode()
     {
+        if (isTransitioning) return; // No permitir cambios durante la transición
+
         isExecutionMode = !isExecutionMode;
 
         if (executionButtonImage != null)
@@ -61,25 +72,15 @@ public class GameManager : MonoBehaviour
             executionButtonImage.color = isExecutionMode ? Color.red : Color.white;
         }
 
-        if(isExecutionMode)
-        {
-            LogInfo("Execution mode active");
-        }
-        else
-        {
-            LogInfo("Investigation mode active");
-        }
+        if(isExecutionMode) LogInfo("Execution mode active");
+        else LogInfo("Investigation mode active");
     }
 
-    // Funci�n para buscar la imagen seg�n el rol
     public Sprite GetSpriteForRole(RoleType roleToFind)
     {
         foreach (var data in roleLibrary)
         {
-            if (data.role == roleToFind)
-            {
-                return data.artwork;
-            }
+            if (data.role == roleToFind) return data.artwork;
         }
         return null;
     }
@@ -87,29 +88,83 @@ public class GameManager : MonoBehaviour
     public CardLogic GetCardByID(int idToFind)
     {
         CardLogic[] allCards = FindObjectsByType<CardLogic>(FindObjectsSortMode.None);
-
         foreach (CardLogic card in allCards)
         {
-            if (card.cardID == idToFind)
-            {
-                return card;
-            }
+            if (card.cardID == idToFind) return card;
         }
         return null;
     }
 
     public void UseAP(int amount)
     {
+        if (isTransitioning) return;
+
         currentAP -= amount;
+        UpdateUI(); // Actualizamos texto antes de chequear el 0
+
         if (currentAP <= 0)
         {
             currentAP = 0;
-            Debug.Log("�SE ACAB� EL D�A! -> Pasando a fase Noche...");
-            // EndDay()
+            Debug.Log("¡SE ACABÓ EL DÍA! -> Iniciando transición a Noche...");
+            
+            // INICIAMOS LA TRANSICIÓN
+            StartCoroutine(TransitionToNightRoutine());
         }
-        UpdateUI();
     }
     
+    // --- NUEVA RUTINA DE TRANSICIÓN ---
+    IEnumerator TransitionToNightRoutine()
+    {
+        isTransitioning = true;
+        LogInfo("Cae la noche...");
+
+        // 1. Bloqueamos interacciones
+        if (fadePanel != null) fadePanel.blocksRaycasts = true;
+
+        // 2. FADE OUT (Pantalla se vuelve negra)
+        float timer = 0f;
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            if (fadePanel != null) fadePanel.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+            yield return null; // Esperar al siguiente frame
+        }
+        if (fadePanel != null) fadePanel.alpha = 1f;
+
+        // 3. CAMBIO DE FONDO (En la oscuridad total)
+        yield return new WaitForSeconds(0.5f); // Pequeña pausa en negro
+        
+        if (backgroundObject != null && nightSprite != null)
+        {
+            backgroundObject.sprite = nightSprite;
+        }
+        else
+        {
+            Debug.LogWarning("Falta asignar el BackgroundObject o el NightSprite en el Inspector del GameManager");
+        }
+
+        // Aquí podrías añadir lógica extra de la fase de noche (resetear AP, turno enemigos, etc.)
+        // ResetAPForNight(); 
+
+        // 4. FADE IN (Vuelve la imagen con el fondo nuevo)
+        timer = 0f;
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            if (fadePanel != null) fadePanel.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+            yield return null;
+        }
+        
+        if (fadePanel != null) 
+        {
+            fadePanel.alpha = 0f;
+            fadePanel.blocksRaycasts = false; // Desbloqueamos interacciones
+        }
+
+        isTransitioning = false;
+        LogInfo("Es de noche. Ten cuidado.");
+    }
+
     public void UpdateUI()
     {
         if (apText != null) apText.text = $"AP: {currentAP} / {maxAP}";
@@ -118,7 +173,6 @@ public class GameManager : MonoBehaviour
         if (playerLives <= 0)
         {
             LogInfo("GAME OVER");
-            // Defeat Screen
         }
     }
 
@@ -126,13 +180,9 @@ public class GameManager : MonoBehaviour
     {
         CardLogic[] allCards = FindObjectsByType<CardLogic>(FindObjectsSortMode.None);
         int count = 0;
-
         foreach (CardLogic card in allCards)
         {
-            if (card.realRole == RoleType.Imp)
-            {
-                count++;
-            }
+            if (card.realRole == RoleType.Imp) count++;
         }
         return count;
     }
