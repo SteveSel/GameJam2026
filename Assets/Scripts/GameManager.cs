@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
     public void LogInfo(string message)
     {
         // 1. Log pequeño (Historial)
-        if (infoLog != null) infoLog.text = "> " + message;
+        if (infoLog != null) infoLog.text += "> " + message;
 
         // 2. Texto Grande en Pantalla
         ShowOnScreenMessage(message);
