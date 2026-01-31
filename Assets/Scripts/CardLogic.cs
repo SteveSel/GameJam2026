@@ -42,7 +42,7 @@ public class CardLogic : MonoBehaviour
         isRevealed = true;
         backCover.SetActive(false); // Quitamos la tapa -> Se ve el roleIcon
 
-        // Gastamos 1 punto de acción
+        // Gastamos 1 punto de acciï¿½n
         GameManager.Instance.UseAP(1);
 
         Debug.Log("Revelado: " + myRole);
