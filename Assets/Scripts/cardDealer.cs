@@ -4,12 +4,12 @@ using System.Collections.Generic;
 public class CardDealer : MonoBehaviour
 {
     [Header("Referencias Visuales")]
-    public GameObject prefabCarta;      
+    public GameObject prefabCarta;
     public Transform contenedorCartas; 
 
     [Header("Configuración de Nivel (Mazo)")]
     public int totalCartas = 9;
-    [Tooltip("Roles que SIEMPRE aparecerán (ej. Imp, Sheriff)")]
+    [Tooltip("Roles que SIEMPRE aparecerán")]
     public List<RoleType> rolesObligatorios; // Antes 'specialRoles'
     [Tooltip("Roles para rellenar los huecos que falten")]
     public List<RoleType> rolesRelleno;      // Antes 'fillerRoles'
@@ -33,7 +33,6 @@ public class CardDealer : MonoBehaviour
 
     public void RepartirCartas()
     {
-        // 1. CHEQUEOS DE SEGURIDAD
         if (GameManager.Instance == null) return;
         if (rolesRelleno.Count == 0) 
         {
@@ -44,15 +43,10 @@ public class CardDealer : MonoBehaviour
         // Limpiar mesa anterior
         foreach (Transform child in contenedorCartas) Destroy(child.gameObject);
 
-        // ---------------------------------------------------------
-        // 2. CONSTRUCCIÓN DEL MAZO (Lógica traída de LevelGenerator)
-        // ---------------------------------------------------------
         List<RoleType> mazo = new List<RoleType>();
 
-        // A. Añadir obligatorios (1 de cada uno de la lista)
         mazo.AddRange(rolesObligatorios);
 
-        // B. Rellenar hasta llegar al total
         int huecosFaltantes = totalCartas - mazo.Count;
         for (int i = 0; i < huecosFaltantes; i++)
         {
@@ -60,21 +54,16 @@ public class CardDealer : MonoBehaviour
             mazo.Add(rolRandom);
         }
 
-        // C. Barajar (Shuffle)
         Barajar(mazo);
 
-        // Actualizar GameManager para el Sheriff
         GameManager.Instance.totalCardsInGame = mazo.Count;
 
-        // ---------------------------------------------------------
-        // 3. INSTANCIACIÓN Y POSICIONAMIENTO (Lógica de CardDealer)
-        // ---------------------------------------------------------
         for (int i = 0; i < mazo.Count; i++)
         {
-            // A. Crear objeto
+            // Crear objeto
             GameObject nuevaCarta = Instantiate(prefabCarta, contenedorCartas);
             
-            // B. Setup Lógica (Usando el rol del mazo barajado)
+            // Setup Lógica (Usando el rol del mazo barajado)
             CardLogic logic = nuevaCarta.GetComponent<CardLogic>();
             if (logic != null) 
             {
@@ -82,7 +71,7 @@ public class CardDealer : MonoBehaviour
                 logic.SetupCard(mazo[i], i + 1);
             }
 
-            // C. Posicionamiento Matemático
+            // Posicionamiento Matemático
             float t = (mazo.Count > 1) ? (float)i / (mazo.Count - 1) : 0.5f;
             float anguloRad = Mathf.Lerp(anguloInicio, anguloFin, t) * Mathf.Deg2Rad;
 
@@ -91,7 +80,7 @@ public class CardDealer : MonoBehaviour
 
             nuevaCarta.transform.localPosition = new Vector3(x, y, 0);
             
-            // D. Escala y Rotación
+            // Escala y Rotación
             nuevaCarta.transform.localScale = Vector3.one * escalaCarta;
             nuevaCarta.transform.localRotation = Quaternion.identity;
             

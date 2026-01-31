@@ -91,7 +91,7 @@ public class CardLogic : MonoBehaviour
         }
     }
 
-    void ExecuteThisCard()
+    public void ExecuteThisCard()
     {
         isDead = true;
         isRevealed = true;
@@ -115,7 +115,7 @@ public class CardLogic : MonoBehaviour
 
     }
 
-    void RevealCard()
+    public void RevealCard()
     {
         isRevealed = true;
         backCover.SetActive(false); // Se ve el disguisedRole
@@ -124,7 +124,7 @@ public class CardLogic : MonoBehaviour
         GameManager.Instance.LogInfo($"You revealed card #{cardID}. It seems a {disguisedRole}");
     }
 
-    void UseAbility()
+    public void UseAbility()
     {
         GameManager.Instance.UseAP(1);
 

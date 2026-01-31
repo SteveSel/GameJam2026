@@ -19,10 +19,10 @@ public class GameManager : MonoBehaviour
     public List<RoleVisualData> roleLibrary; 
 
     [Header("Estado del Juego")]
-    public int currentAP = 3;
-    public int maxAP = 3;
+    public int currentAP = 100;
+    public int maxAP = 100;
     public int playerLives = 3;
-    public int totalCardsInGame = 9;
+    public int totalCardsInGame = 8;
 
     public bool isExecutionMode = false;
 
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     public void LogInfo(string message)
     {
-        infoLog.text = message;
+        infoLog.text += "\n> " + message;
     }
 
     void Awake()
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            LogInfo("Investigation mode active");
+            LogInfo("Invest mode active");
         }
     }
 
@@ -136,4 +136,12 @@ public class GameManager : MonoBehaviour
         }
         return count;
     }
+}
+
+public enum RoleType
+{
+    Imp,
+    Healer,
+    Scribe,
+    Investigator
 }
