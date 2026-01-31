@@ -57,6 +57,11 @@ public class GameManager : MonoBehaviour
     public Animator backgroundAnimator;
     public float fadeDuration = 1.0f;
 
+    [Header("Game Over UI")]
+    public GameObject gameOverPanel ;
+    public TextMeshProUGUI resultTitle ;
+    public TextMeshProUGUI statsSummary ;
+
     // Variable para controlar la corrutina de texto y que no se solapen bruscamente
     private Coroutine currentMessageRoutine;
 
@@ -345,14 +350,20 @@ public class GameManager : MonoBehaviour
 
         if (executionButtonImage != null) executionButtonImage.gameObject.SetActive(false);
 
-        if (victory)
-        {
-            LogInfo("¡VICTORY! You killed all demons.");
+        if (gameOverPanel != null) {
+            gameOverPanel.SetActive(true);
+        
+            if (resultTitle != null) {
+                resultTitle.text = victory ? "¡VICTORIA!" : "DERROTA...";
+                resultTitle.color = victory ? Color.green : Color.red;
+            }
+            if (statsSummary != null) {
+                // Aquí puedes añadir más estadísticas si lo deseas
+                statsSummary.text = $"Días sobrevividos: {dayCount}\n";
+            }
         }
-        else
-        {
-            LogInfo("DEFEAT... You ran out of HP.");
-        }
+        if (victory) LogInfo("¡Has eliminado a todos los demonios!"); 
+        else LogInfo("Has perdido todas tus vidas...");
     }
 
     public bool IsHighRankDemon(RoleType role)
