@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     public int playerLives = 3;
     public int maxLives = 3;
     public int totalCardsInGame = 9;
+    public bool isGameOver = false;
 
     public bool isExecutionMode = false;
     private bool isTransitioning = false;
@@ -185,8 +186,8 @@ public class GameManager : MonoBehaviour
         isTransitioning = true;
         if (fadePanel != null) fadePanel.blocksRaycasts = true; 
 
-        // --- FASE 1: IR A DORMIR ---
-        LogInfo("Cae la noche..."); // Esto mostrará el texto grande también
+        LogInfo("Cae la noche...");
+
         float timer = 0f;
         while (timer < fadeDuration)
         {
@@ -209,8 +210,9 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        // --- FASE 3: NOCHE (5 Segundos) ---
-        // Aquí podrías poner un mensaje de "Turno de los Demonios" si quisieras
+        // ---------------------------------------------
+        // FASE 3: ESPERA DE 2 SEGUNDOS (El jugador mira, no toca)
+        // ---------------------------------------------
         yield return new WaitForSeconds(2.0f); 
 
         // --- FASE 4: AMANECER ---
@@ -259,10 +261,49 @@ public class GameManager : MonoBehaviour
         if (apText != null) apText.text = $"AP: {currentAP} / {maxAP}";
         if (livesText != null) livesText.text = $"HP: {playerLives}";
 
-        if (playerLives <= 0)
+        if (playerLives <= 0 && !isGameOver)
         {
-            // Puedes crear una función específica de Game Over si quieres
-            ShowOnScreenMessage("GAME OVER");
+            TriggerGameOver(false);
+        }
+    }
+
+    public int CountAliveDemons()
+    {
+        CardLogic[] allCards = FindObjectsByType<CardLogic>(FindObjectsSortMode.None);
+        int count = 0;
+        foreach (CardLogic card in allCards)
+        {
+            if (card.realRole == RoleType.Imp && !card.isDead)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void CheckWinCondition()
+    {
+        int demonsLeft = CountAliveDemons();
+
+        if (demonsLeft == 0 && !isGameOver)
+        {
+            TriggerGameOver(true);
+        }
+    }
+
+    public void TriggerGameOver(bool victory)
+    {
+        isGameOver = true;
+
+        if (executionButtonImage != null) executionButtonImage.gameObject.SetActive(false);
+
+        if (victory)
+        {
+            LogInfo("¡VICTORY! You killed all demons.");
+        }
+        else
+        {
+            LogInfo("DEFEAT... You ran out of HP.");
         }
     }
 

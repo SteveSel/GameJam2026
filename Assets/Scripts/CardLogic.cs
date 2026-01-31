@@ -59,6 +59,10 @@ public class CardLogic : MonoBehaviour
     
     public void OnClickCard()
     {
+        if (GameManager.Instance.isGameOver) return;
+
+        Debug.Log("Has clicado en la carta #" + cardID + " que es realmente: " + realRole);
+
         if (isDead || GameManager.Instance.currentAP <= 0) return;
 
         if (GameManager.Instance.isExecutionMode)
@@ -87,11 +91,22 @@ public class CardLogic : MonoBehaviour
         if (myButton != null) myButton.image.color = Color.gray;
         if (roleIcon != null) roleIcon.color = Color.gray;
 
-        GameManager.Instance.ToggleExecutionMode(false);
+        Sprite trueSprite = GameManager.Instance.GetSpriteForRole(realRole);
+
+        if (roleIcon != null)
+        {
+            roleIcon.sprite = trueSprite;
+        }
+
+        //Gris = muerto
+        if (myButton != null) myButton.image.color = Color.gray;
+        if (roleIcon != null) roleIcon.color = Color.gray;
 
         if (IsDemon(realRole))
         {
-            GameManager.Instance.LogInfo($"Has ejecutado al DEMONIO (#{cardID}).");
+            GameManager.Instance.LogInfo($"¡JUSTICE! You executed card #{cardID}. IT WAS A DEMON.");
+            if (roleIcon != null) roleIcon.color = new Color(1f, 0.5f, 0.5f);
+            GameManager.Instance.CheckWinCondition();
         }
         else
         {
