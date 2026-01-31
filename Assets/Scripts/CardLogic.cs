@@ -31,7 +31,7 @@ public class CardLogic : MonoBehaviour
 
         if (idText != null) idText.text = "#" + cardID.ToString();
 
-        if (IsDemon(realRole)) disguisedRole = GetRandomVillagerRole();
+        if (IsDemon(realRole) || assignedRole == RoleType.Jester || assignedRole == RoleType.Doomsayer) disguisedRole = GetRandomVillagerRole();
         else disguisedRole = realRole;
 
         if (GameManager.Instance != null)
@@ -59,7 +59,7 @@ public class CardLogic : MonoBehaviour
 
     public bool CheckIfCorrupted()
     {
-        if (IsDemon(realRole) || isCorruptedByBeelzebub) return true;
+        if (IsDemon(realRole) || isCorruptedByBeelzebub || realRole == RoleType.Jester || realRole == RoleType.Doomsayer) return true;
 
         int leftID = GameManager.Instance.GetCircularID(cardID, -1);
         int rightID = GameManager.Instance.GetCircularID(cardID, 1);
@@ -80,7 +80,7 @@ public class CardLogic : MonoBehaviour
 
     RoleType GetRandomVillagerRole()
     {
-        int r = Random.Range(0, 9);
+        int r = Random.Range(0, 10);
         if (r == 0) return RoleType.Healer;
         if (r == 1) return RoleType.Scribe;
         if (r == 2) return RoleType.Queen;
@@ -89,6 +89,7 @@ public class CardLogic : MonoBehaviour
         if (r == 5) return RoleType.Gravekeeper;
         if (r == 6) return RoleType.Hunter;
         if (r == 7) return RoleType.Diplomat;
+        if (r == 8) return RoleType.Lazy;
         else return RoleType.Torchbearer;
     }
     
@@ -203,8 +204,30 @@ public class CardLogic : MonoBehaviour
         }
         else
         {
-            GameManager.Instance.playerLives -= 2;
-            GameManager.Instance.LogInfo($"Has ejecutado a un INOCENTE (#{cardID}).");
+            switch (realRole)
+            {
+                case RoleType.Jester:
+                    GameManager.Instance.LogInfo("¡JESTER! Te ha gastado una broma final. (-1 AP Máximo permanente).");
+                    GameManager.Instance.permanentAPPenalty++;
+                    break;
+
+                case RoleType.Doomsayer:
+                    GameManager.Instance.LogInfo("¡DOOMSAYER! Su muerte invoca la oscuridad inmediata.");
+                    GameManager.Instance.playerLives -= 2;
+                    GameManager.Instance.SkipToNight();
+                    break;
+
+                case RoleType.Lazy:
+                    GameManager.Instance.LogInfo("¡Has matado al VAGO! Era inútil, pero inocente. (-1 HP).");
+                    GameManager.Instance.playerLives -= 1;
+                    break;
+
+                case RoleType.Amnesiac:
+                default:
+                    GameManager.Instance.playerLives -= 2;
+                    GameManager.Instance.LogInfo($"¡ERROR! Has ejecutado a un INOCENTE (#{cardID}).");
+                    break;
+            }
         }
 
         GameManager.Instance.UpdateUI();
@@ -274,6 +297,22 @@ public class CardLogic : MonoBehaviour
                 break;
             case RoleType.Torchbearer:
                 TryToTorchbearer();
+                isUsed = true;
+                break;
+            case RoleType.Jester:
+                GameManager.Instance.LogInfo("Jester: *Hace malabares y se ríe*");
+                isUsed = true;
+                break;
+            case RoleType.Doomsayer:
+                GameManager.Instance.LogInfo("Doomsayer: 'El fin se acerca...'");
+                isUsed = true;
+                break;
+            case RoleType.Amnesiac:
+                GameManager.Instance.LogInfo("Amnesiac: '¿Quién soy? No recuerdo nada...'");
+                isUsed = true;
+                break;
+            case RoleType.Lazy:
+                GameManager.Instance.LogInfo("Lazy: 'Zzz...'");
                 isUsed = true;
                 break;
             case RoleType.Investigator:
@@ -516,8 +555,7 @@ public class CardLogic : MonoBehaviour
 
     void TryToTorchbearer()
     {
-        // Si soy demonio, nunca me quemo
-        if (IsDemon(realRole))
+        if (CheckIfCorrupted())
         {
             GameManager.Instance.LogInfo("Torchbearer: 'La luz brilla con fuerza...'");
             return;
