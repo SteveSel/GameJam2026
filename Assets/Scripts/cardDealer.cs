@@ -40,7 +40,6 @@ public class CardDealer : MonoBehaviour
             return;
         }
 
-        // Limpiar mesa anterior
         foreach (Transform child in contenedorCartas) Destroy(child.gameObject);
 
         List<RoleType> mazo = new List<RoleType>();
@@ -71,8 +70,26 @@ public class CardDealer : MonoBehaviour
                 logic.SetupCard(mazo[i], i + 1);
             }
 
-            // Posicionamiento Matemático
-            float t = (mazo.Count > 1) ? (float)i / (mazo.Count - 1) : 0.5f;
+            // C. Posicionamiento Matemático
+            bool esCirculoCompleto = Mathf.Abs(anguloInicio - anguloFin) >= 360f;
+
+            float t;
+            if (mazo.Count > 1)
+            {
+                if (esCirculoCompleto)
+                {
+                    t = (float)i / mazo.Count; 
+                }
+                else
+                {
+                    t = (float)i / (mazo.Count - 1); 
+                }
+            }
+            else
+            {
+                t = 0.5f;
+            }
+
             float anguloRad = Mathf.Lerp(anguloInicio, anguloFin, t) * Mathf.Deg2Rad;
 
             float x = Mathf.Cos(anguloRad) * radioX + centroCirculo.x;
@@ -80,7 +97,6 @@ public class CardDealer : MonoBehaviour
 
             nuevaCarta.transform.localPosition = new Vector3(x, y, 0);
             
-            // Escala y Rotación
             nuevaCarta.transform.localScale = Vector3.one * escalaCarta;
             nuevaCarta.transform.localRotation = Quaternion.identity;
             
