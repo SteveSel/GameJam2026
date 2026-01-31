@@ -44,10 +44,10 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI infoLog;
 
     [Header("Transición Día/Noche")]
-    public CanvasGroup fadePanel;          // Arrastra aquí el panel negro con CanvasGroup
-    public SpriteRenderer backgroundObject; // Arrastra aquí el objeto del fondo
-    public Sprite nightSprite;             // Arrastra aquí la imagen 'nightTimescene'
-    public float fadeDuration = 1.0f;      // Tiempo que tarda en oscurecerse
+    [Header("Transición Día/Noche")]
+    public CanvasGroup fadePanel;
+    public Animator backgroundAnimator;
+    public float fadeDuration = 1.0f;
 
     public void LogInfo(string message)
     {
@@ -109,84 +109,51 @@ public class GameManager : MonoBehaviour
         if (isTransitioning) return;
 
         currentAP -= amount;
-        UpdateUI(); // Actualizamos texto antes de chequear el 0
+        UpdateUI(); 
 
         if (currentAP <= 0)
         {
             currentAP = 0;
-            Debug.Log("¡SE ACABÓ EL DÍA! -> Iniciando transición a Noche...");
-            
-            // INICIAMOS LA TRANSICIÓN
+            Debug.Log("¡SE ACABÓ EL DÍA! -> Iniciando transición a Noche Animada...");
             StartCoroutine(TransitionToNightRoutine());
         }
     }
 
-    public void startDay()
-    {
-        currentPhase = GamePhase.Day;
-        currentAP = maxAP;
-
-        if (nextDayButton != null)
-            nextDayButton.gameObject.SetActive(false);
-
-        LogInfo("¡Comienza el día " + dayCount + "! Tienes " + currentAP + " AP.");
-        UpdateUI();
-    }
-
-    public void EndDay()
-    {
-        if (currentPhase == GamePhase.Night) return ;
-        currentPhase = GamePhase.Night;
-
-
-        if (nextDayButton != null)
-            nextDayButton.gameObject.SetActive(true);
-
-        LogInfo("¡Ha terminado el día " + dayCount + "! Prepárate para la noche.");
-        UpdateUI();
-    }
-
-    public void OnNextDayButtonPressed()
-    {
-        dayCount++;
-        startDay();
-    }
     
-    // --- NUEVA RUTINA DE TRANSICIÓN ---
+    
     IEnumerator TransitionToNightRoutine()
     {
         isTransitioning = true;
         LogInfo("Cae la noche...");
 
-        // 1. Bloqueamos interacciones
         if (fadePanel != null) fadePanel.blocksRaycasts = true;
 
-        // 2. FADE OUT (Pantalla se vuelve negra)
+        // 1. FADE OUT (Pantalla negra)
         float timer = 0f;
         while (timer < fadeDuration)
         {
             timer += Time.deltaTime;
             if (fadePanel != null) fadePanel.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
-            yield return null; // Esperar al siguiente frame
+            yield return null; 
         }
         if (fadePanel != null) fadePanel.alpha = 1f;
 
-        // 3. CAMBIO DE FONDO (En la oscuridad total)
-        yield return new WaitForSeconds(0.5f); // Pequeña pausa en negro
+        // 2. CAMBIO DE ESTADO EN EL ANIMATOR (Pantalla en negro)
+        yield return new WaitForSeconds(0.2f); 
         
-        if (backgroundObject != null && nightSprite != null)
+        // <--- AQUÍ ESTÁ EL CAMBIO PRINCIPAL --->
+        if (backgroundAnimator != null)
         {
-            backgroundObject.sprite = nightSprite;
+            // Activamos el booleano que configuramos en el paso 3
+            backgroundAnimator.SetBool("esNoche", true);
         }
         else
         {
-            Debug.LogWarning("Falta asignar el BackgroundObject o el NightSprite en el Inspector del GameManager");
+            Debug.LogWarning("ERROR: No has asignado el 'Background Animator' en el Inspector del GameManager.");
         }
+        // <------------------------------------->
 
-        // Aquí podrías añadir lógica extra de la fase de noche (resetear AP, turno enemigos, etc.)
-        // ResetAPForNight(); 
-
-        // 4. FADE IN (Vuelve la imagen con el fondo nuevo)
+        // 3. FADE IN (Vuelve la imagen y ya estará reproduciéndose la animación)
         timer = 0f;
         while (timer < fadeDuration)
         {
@@ -198,7 +165,7 @@ public class GameManager : MonoBehaviour
         if (fadePanel != null) 
         {
             fadePanel.alpha = 0f;
-            fadePanel.blocksRaycasts = false; // Desbloqueamos interacciones
+            fadePanel.blocksRaycasts = false; 
         }
 
         isTransitioning = false;
