@@ -115,16 +115,16 @@ public class CardLogic : MonoBehaviour
 
     }
 
-    void RevealCard()
+    public void RevealCard()
     {
         isRevealed = true;
         backCover.SetActive(false); // Se ve el disguisedRole
         GameManager.Instance.UseAP(1);
-
+        Debug.Log($"Revealed card #{cardID}, it is a {disguisedRole}");
         GameManager.Instance.LogInfo($"You revealed card #{cardID}. It seems a {disguisedRole}");
     }
 
-    void UseAbility()
+    public void UseAbility()
     {
         GameManager.Instance.UseAP(1);
 

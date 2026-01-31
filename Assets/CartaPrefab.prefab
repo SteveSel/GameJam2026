@@ -407,7 +407,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7563253811599280364}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8474584223431172373}
+        m_TargetAssemblyTypeName: CardLogic, Assembly-CSharp
+        m_MethodName: RevealCard
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6085568935885337069
 GameObject:
   m_ObjectHideFlags: 0

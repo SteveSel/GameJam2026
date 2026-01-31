@@ -609,7 +609,6 @@ GameObject:
   - component: {fileID: 560755280}
   - component: {fileID: 560755281}
   - component: {fileID: 560755282}
-  - component: {fileID: 560755283}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -660,12 +659,12 @@ MonoBehaviour:
   currentAP: 3
   maxAP: 3
   playerLives: 3
-  totalCardsInGame: 9
+  totalCardsInGame: 8
   isExecutionMode: 0
   apText: {fileID: 1737718372}
   livesText: {fileID: 1463590926}
   executionButtonImage: {fileID: 1517317878}
-  infoLog: {fileID: 0}
+  infoLog: {fileID: 161611584}
 --- !u!114 &560755282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -681,31 +680,14 @@ MonoBehaviour:
   prefabCarta: {fileID: 6085568935885337069, guid: c68babee7ed2c55489bd46beb9b0cb0d, type: 3}
   contenedorCartas: {fileID: 228696476}
   totalCartas: 9
-  rolesObligatorios: 
-  rolesRelleno: 
+  rolesObligatorios: 0000000000000000010000000200000003000000
+  rolesRelleno: 010000000200000003000000
   escalaCarta: 0.18
   radioX: 300
   radioY: 180
   centroCirculo: {x: 0, y: 0}
   anguloInicio: 360
   anguloFin: 0
---- !u!114 &560755283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 560755279}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e17eccd88ba7da46801fb1648bec88d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LevelGenerator
-  cardPrefab: {fileID: 0}
-  gridContainer: {fileID: 0}
-  totalCards: 9
-  specialRoles: 0000000000000000020000000300000001000000
-  fillerRoles: 010000000200000003000000
 --- !u!1 &868504017
 GameObject:
   m_ObjectHideFlags: 0
@@ -878,8 +860,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1181,7 +1163,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 2530564911472380330, guid: 278ee53c5b7fba3d090a9d412abcf5ec, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
