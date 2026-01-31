@@ -20,39 +20,29 @@ public class CardLogic : MonoBehaviour
     public Button myButton;
 
     public void SetupCard(RoleType assignedRole, int newID)
-{
-    realRole = assignedRole;
-    cardID = newID;
-
-    if (idText != null) idText.text = "#" + cardID.ToString();
-
-    if (IsDemon(realRole)) disguisedRole = GetRandomVillagerRole();
-    else disguisedRole = realRole;
-
-    Sprite disguiseSprite = GameManager.Instance.GetSpriteForRole(disguisedRole);
-
-    if (roleIcon != null)
     {
-        roleIcon.sprite = disguiseSprite;
-    }
-    else
-    {
-        Debug.LogError($"ERROR: La carta #{newID} no tiene asignado el 'Role Icon' en su Inspector.");
-    }
+        realRole = assignedRole;
+        cardID = newID;
 
-    if (backCover != null)
-    {
-        backCover.SetActive(true);
-    }
-    else
-    {
-        Debug.LogError($"ERROR: La carta #{newID} no tiene asignado el 'Back Cover' en su Inspector.");
-    }
+        if (idText != null) idText.text = "#" + cardID.ToString();
+
+        if (IsDemon(realRole)) disguisedRole = GetRandomVillagerRole();
+        else disguisedRole = realRole;
+
+        if (GameManager.Instance != null)
+        {
+            Sprite disguiseSprite = GameManager.Instance.GetSpriteForRole(disguisedRole);
+            if (roleIcon != null) roleIcon.sprite = disguiseSprite;
+        }
+
+        if (backCover != null) backCover.SetActive(true);
         
-    isRevealed = false;
-    isDead = false;
-    if (myButton != null) myButton.image.color = Color.white;
-}
+        isRevealed = false;
+        isDead = false;
+        
+        if (myButton != null) myButton.image.color = Color.white;
+        if (roleIcon != null) roleIcon.color = Color.white;
+    }
 
     bool IsDemon(RoleType role)
     {
@@ -66,11 +56,9 @@ public class CardLogic : MonoBehaviour
         if (r == 1) return RoleType.Scribe;
         else return RoleType.Investigator;
     }
-
+    
     public void OnClickCard()
     {
-        Debug.Log("Has clicado en la carta #" + cardID + " que es realmente: " + realRole);
-
         if (isDead || GameManager.Instance.currentAP <= 0) return;
 
         if (GameManager.Instance.isExecutionMode)
@@ -87,41 +75,41 @@ public class CardLogic : MonoBehaviour
             {
                 UseAbility();
             }
-
         }
     }
 
     public void ExecuteThisCard()
     {
         isDead = true;
-        isRevealed = true;
-        backCover.SetActive(false);
+        isRevealed = true;          
+        backCover.SetActive(false); 
 
-        //Gris = muerto
-        myButton.image.color = Color.gray;
-        roleIcon.color = Color.gray;
+        if (myButton != null) myButton.image.color = Color.gray;
+        if (roleIcon != null) roleIcon.color = Color.gray;
+
+        GameManager.Instance.ToggleExecutionMode(false);
 
         if (IsDemon(realRole))
         {
-            GameManager.Instance.LogInfo($"¡JUSTICE! You executed card #{cardID}. IT WAS A DEMON.");
+            GameManager.Instance.LogInfo($"Has ejecutado al DEMONIO (#{cardID}).");
         }
         else
         {
             GameManager.Instance.playerLives -= 2;
-            GameManager.Instance.LogInfo($"¡ERROR! You executed card #{cardID}. IT WAS INNOCENT");
+            GameManager.Instance.LogInfo($"Has ejecutado a un INOCENTE (#{cardID}).");
         }
-        GameManager.Instance.UpdateUI();
-        GameManager.Instance.ToggleExecutionMode();
 
+        GameManager.Instance.UpdateUI();
     }
 
     public void RevealCard()
     {
         isRevealed = true;
-        backCover.SetActive(false); // Se ve el disguisedRole
+        backCover.SetActive(false); 
+        
         GameManager.Instance.UseAP(1);
-        Debug.Log($"Revealed card #{cardID}, it is a {disguisedRole}");
-        GameManager.Instance.LogInfo($"You revealed card #{cardID}. It seems a {disguisedRole}");
+        
+        GameManager.Instance.LogInfo($"Investigación: La carta #{cardID} parece {disguisedRole}");
     }
 
     public void UseAbility()
@@ -141,8 +129,6 @@ public class CardLogic : MonoBehaviour
             case RoleType.Investigator:
                 TryToInvestigate();
                 break;
-
-                //AGregar mas roles
         }
     }
 
@@ -151,12 +137,20 @@ public class CardLogic : MonoBehaviour
         if (IsDemon(realRole))
         {
             GameManager.Instance.playerLives--;
-            GameManager.Instance.LogInfo("¡¡Usaste el healer y te quitó 1HP!!");
+            GameManager.Instance.LogInfo("Healer (Falso): Te ha envenenado (-1 HP)");
         }
         else
         {
-            GameManager.Instance.playerLives++;
-            GameManager.Instance.LogInfo("¡¡Usaste el healer y te sumó 1HP!!");
+            // No puedes curarte por encima del máximo
+            if (GameManager.Instance.playerLives < GameManager.Instance.maxLives)
+            {
+                GameManager.Instance.playerLives++;
+                GameManager.Instance.LogInfo("Healer (Real): Te ha curado (+1 HP)");
+            }
+            else
+            {
+                GameManager.Instance.LogInfo("Healer (Real): Ya estás a tope de vida.");
+            }
         }
         GameManager.Instance.UpdateUI();
     }
@@ -168,11 +162,14 @@ public class CardLogic : MonoBehaviour
         if (IsDemon(realRole))
         {
             int fakeCount = realCount + (Random.Range(0, 2) == 0 ? 1 : -1);
-            GameManager.Instance.LogInfo($"Scribe(Falso): Veo exactamente {fakeCount} demonios en la mesa");
+            // Evitar negativos
+            if (fakeCount < 0) fakeCount = 0; 
+            
+            GameManager.Instance.LogInfo($"Scribe (Falso): 'Detecto {fakeCount} presencias oscuras...'");
         }
         else
         {
-            GameManager.Instance.LogInfo($"Scribe(Real): Veo exactamente {realCount} demonios en la mesa");
+            GameManager.Instance.LogInfo($"Scribe (Real): 'Detecto exactamente {realCount} presencias oscuras.'");
         }
     }
 
@@ -180,17 +177,23 @@ public class CardLogic : MonoBehaviour
     {
         int totalCards = GameManager.Instance.totalCardsInGame;
         int targetID = cardID;
+        int intentos = 0;
         if (totalCards > 1)
         {
-            while (targetID == cardID)
+            while (targetID == cardID && intentos < 100)
             {
                 targetID = Random.Range(1, totalCards + 1);
+                intentos++;
             }
         }
 
         CardLogic targetCard = GameManager.Instance.GetCardByID(targetID);
         
-        if (targetCard == null) return;
+        if (targetCard == null || targetCard.isDead) 
+        {
+            GameManager.Instance.LogInfo("Sheriff: 'No encuentro a nadie sospechoso...'");
+            return;
+        }
 
         bool targetIsDemon = IsDemon(targetCard.realRole);
         bool amILying = IsDemon(realRole);
