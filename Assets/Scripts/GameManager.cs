@@ -3,6 +3,12 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 
+public enum GamePhase
+{
+    Day,
+    Night
+}
+
 [System.Serializable]
 public struct RoleVisualData
 {
@@ -15,13 +21,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [Header("Configuración de Roles")]
+    [Header("ConfiguraciÃ³n de Roles")]
     public List<RoleVisualData> roleLibrary; 
 
     [Header("Estado del Juego")]
+    public GamePhase currentPhase = GamePhase.Day;
+    public int dayCount = 1;
     public int currentAP = 3;
     public int maxAP = 3;
     public int playerLives = 3;
+    public int maxLives = 3 ;
     public int totalCardsInGame = 9;
 
     [Header("UI References")]
@@ -30,6 +39,10 @@ public class GameManager : MonoBehaviour
 
     [Header("UI Textos")]
     public TextMeshProUGUI infoLog;
+
+    // Optional
+    public Button nextDayButton;
+
 
     public void LogInfo(string message)
     {
@@ -43,10 +56,11 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        UpdateUI();
+      
+        startDay();
     }
 
-    // Función para buscar la imagen según el rol
+    // Funciï¿½n para buscar la imagen segï¿½n el rol
     public Sprite GetSpriteForRole(RoleType roleToFind)
     {
         foreach (var data in roleLibrary)
@@ -75,20 +89,54 @@ public class GameManager : MonoBehaviour
 
     public void UseAP(int amount)
     {
+        if (currentPhase == GamePhase.Night) return ;
         currentAP -= amount;
         if (currentAP <= 0)
         {
             currentAP = 0;
-            Debug.Log("¡SE ACABÓ EL DÍA! -> Pasando a fase Noche...");
-            // EndDay()
+            Debug.Log("Se acabÃ³ el dÃ­a! -> Pasando a fase Noche...");
+            EndDay() ;
         }
         UpdateUI();
+    }
+
+    public void startDay()
+    {
+        currentPhase = GamePhase.Day;
+        currentAP = maxAP;
+
+        if (nextDayButton != null)
+            nextDayButton.gameObject.SetActive(false);
+
+        LogInfo("Â¡Comienza el dÃ­a " + dayCount + "! Tienes " + currentAP + " AP.");
+        UpdateUI();
+    }
+
+    public void EndDay()
+    {
+        if (currentPhase == GamePhase.Night) return ;
+        currentPhase = GamePhase.Night;
+
+
+        if (nextDayButton != null)
+            nextDayButton.gameObject.SetActive(true);
+
+        LogInfo("Â¡Ha terminado el dÃ­a " + dayCount + "! PrepÃ¡rate para la noche.");
+        UpdateUI();
+    }
+
+    public void OnNextDayButtonPressed()
+    {
+        dayCount++;
+        startDay();
     }
     
     void UpdateUI()
     {
-        if (apText != null) apText.text = "AP: " + currentAP;
-        if (livesText != null) livesText.text = "Vidas: " + playerLives;
+        string phaseText = currentPhase == GamePhase.Day ? "DÃ­a" : "Noche";
+        if (apText != null) apText.text = $"AP: {currentAP} | {phaseText} {dayCount}";
+        if (livesText != null) livesText.text = "Lives: " + playerLives;
+        
     }
 
     public int CountRealDemons()
