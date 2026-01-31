@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI apText;
     public TextMeshProUGUI livesText;
     public Image executionButtonImage;
+    public Image sleepButtonImage;
     public TextMeshProUGUI infoLog; // El log pequeño (historial)
 
     [Header("Notificaciones en Pantalla")]
@@ -471,6 +472,18 @@ public class GameManager : MonoBehaviour
                 currentInvestigator.markedForDeath = true;
             }
         }
+    }
+
+    public void SkipToNight()
+    {
+        if (isTransitioning || isGameOver || currentPhase == GamePhase.Night) return;
+
+        LogInfo("Has decidido descansar temprano...");
+
+        currentAP = 0;
+        UpdateUI();
+
+        StartCoroutine(TransitionToNightRoutine());
     }
 
     public int CountSpecificRoleAlive(RoleType role)
