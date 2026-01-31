@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
     public bool isInvestigating = false;
     public CardLogic currentInvestigator;
 
+    public int permanentAPPenalty = 0;
+
     [Header("UI References")]
     public TextMeshProUGUI apText;
     public TextMeshProUGUI livesText;
@@ -139,7 +141,7 @@ public class GameManager : MonoBehaviour
         bigMessageCanvasGroup.alpha = 0;
     }
 
-    public void ToggleExecutionMode(bool showMessage = true)
+    public void ToggleExecutionMode(bool showMessage = false)
     {
         if (isTransitioning) return;
 
@@ -150,11 +152,6 @@ public class GameManager : MonoBehaviour
             executionButtonImage.color = isExecutionMode ? Color.red : Color.white;
         }
 
-        if (showMessage)
-        {
-            if (isExecutionMode) LogInfo("MODO EJECUCIÓN ACTIVADO");
-            else LogInfo("Modo Investigación");
-        }
     }
 
     public Sprite GetSpriteForRole(RoleType roleToFind)
@@ -221,6 +218,35 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
 
+        List<CardLogic> amnesiacs = new List<CardLogic>();
+        foreach (var c in GetAllCards()) { if (c.realRole == RoleType.Amnesiac && !c.isDead) amnesiacs.Add(c); }
+
+        foreach (var amn in amnesiacs)
+        {
+            // Copia un vecino aleatorio
+            int rightID = GetCircularID(amn.cardID, 1);
+            int leftID = GetCircularID(amn.cardID, -1);
+            List<CardLogic> neighbors = new List<CardLogic>();
+
+            CardLogic r = GetCardByID(rightID); if (r) neighbors.Add(r);
+            CardLogic l = GetCardByID(leftID); if (l) neighbors.Add(l);
+
+            if (neighbors.Count > 0)
+            {
+                CardLogic target = neighbors[Random.Range(0, neighbors.Count)];
+
+                // COPIA EL ROL REAL
+                amn.realRole = target.realRole;
+                // COPIA EL DISFRAZ
+                amn.disguisedRole = target.disguisedRole;
+
+                Sprite newSprite = GetSpriteForRole(amn.disguisedRole);
+                if (amn.roleIcon != null) amn.roleIcon.sprite = newSprite;
+
+                LogInfo($"NOCHE: Un Amnesiac ha recordado quién es...");
+            }
+        }
+
         List<CardLogic> huntersToDie = new List<CardLogic>();
         foreach (var c in GetAllCards())
         {
@@ -283,7 +309,8 @@ public class GameManager : MonoBehaviour
         if (backgroundAnimator != null) backgroundAnimator.SetBool("esNoche", false);
         
         dayCount++; // Subimos el contador
-        currentAP = maxAP - apPenalty; 
+        currentAP = maxAP - apPenalty - permanentAPPenalty;
+        if (currentAP <= 0) currentAP = 0;
         UpdateUI();
         
         // <--- MOSTRAMOS EL TEXTO DE NUEVO DÍA --->
@@ -504,7 +531,7 @@ public class GameManager : MonoBehaviour
         switch (roleAction)
         {
             case RoleType.Investigator:
-                bool targetIsDemon = (targetCard.realRole == RoleType.Imp || IsHighRankDemon(targetCard.realRole));
+                bool targetIsDemon = (targetCard.realRole == RoleType.Imp || IsHighRankDemon(targetCard.realRole) || targetCard.realRole == RoleType.Doomsayer);
                 string veredicto = "";
 
                 if (amILying) veredicto = targetIsDemon ? "HUMANO" : "DEMONIO";
@@ -645,5 +672,11 @@ public enum RoleType
     Satan,
     Beelzebub,
     Belphegor,
-    Leviathan
+    Leviathan,
+
+    // Chaos
+    Jester,
+    Doomsayer,
+    Amnesiac,
+    Lazy
 }
