@@ -307,6 +307,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public bool IsHighRankDemon(RoleType role)
+    {
+        return role == RoleType.Lucifer || role == RoleType.Mammon;
+    }
+
+    public List<CardLogic> GetAllCards()
+    { 
+        return new List<CardLogic>(FindObjectsByType<CardLogic>(FindObjectsSortMode.None));
+    }
+
     public int CountRealDemons()
     {
         CardLogic[] allCards = FindObjectsByType<CardLogic>(FindObjectsSortMode.None);
@@ -321,8 +331,17 @@ public class GameManager : MonoBehaviour
 
 public enum RoleType
 {
-    Imp,
+    // Villagers
     Healer,
     Scribe,
-    Investigator
+    Investigator,
+    Queen,
+    Medium,
+    Monk,
+    Gravekeeper,
+
+    // Demons
+    Imp,
+    Lucifer,
+    Mammon
 }
