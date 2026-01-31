@@ -24,9 +24,13 @@ public class GameManager : MonoBehaviour
     public int playerLives = 3;
     public int totalCardsInGame = 9;
 
+    public bool isExecutionMode = false;
+
     [Header("UI References")]
     public TextMeshProUGUI apText;
     public TextMeshProUGUI livesText;
+
+    public Image executionButtonImage;
 
     [Header("UI Textos")]
     public TextMeshProUGUI infoLog;
@@ -44,6 +48,27 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         UpdateUI();
+    }
+
+
+    // Función para el botón de matar
+    public void ToggleExecutionMode()
+    {
+        isExecutionMode = !isExecutionMode;
+
+        if (executionButtonImage != null)
+        {
+            executionButtonImage.color = isExecutionMode ? Color.red : Color.white;
+        }
+
+        if(isExecutionMode)
+        {
+            LogInfo("Execution mode active");
+        }
+        else
+        {
+            LogInfo("Investigation mode active");
+        }
     }
 
     // Función para buscar la imagen según el rol
@@ -85,10 +110,16 @@ public class GameManager : MonoBehaviour
         UpdateUI();
     }
     
-    void UpdateUI()
+    public void UpdateUI()
     {
-        if (apText != null) apText.text = "AP: " + currentAP;
-        if (livesText != null) livesText.text = "Vidas: " + playerLives;
+        if (apText != null) apText.text = $"AP: {currentAP} / {maxAP}";
+        if (livesText != null) livesText.text = $"HP: {playerLives}";
+
+        if (playerLives <= 0)
+        {
+            LogInfo("GAME OVER");
+            // Defeat Screen
+        }
     }
 
     public int CountRealDemons()
