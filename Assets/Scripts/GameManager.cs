@@ -4,6 +4,12 @@ using System.Collections; // Necesario para IEnumerator
 using System.Collections.Generic;
 using TMPro;
 
+public enum GamePhase
+{
+    Day,
+    Night
+}
+
 [System.Serializable]
 public struct RoleVisualData
 {
@@ -20,9 +26,12 @@ public class GameManager : MonoBehaviour
     public List<RoleVisualData> roleLibrary; 
 
     [Header("Estado del Juego")]
+    public GamePhase currentPhase = GamePhase.Day;
+    public int dayCount = 1;
     public int currentAP = 3;
     public int maxAP = 3;
     public int playerLives = 3;
+    public int maxLives = 3 ;
     public int totalCardsInGame = 9;
 
     public bool isExecutionMode = false;
@@ -110,6 +119,37 @@ public class GameManager : MonoBehaviour
             // INICIAMOS LA TRANSICIÓN
             StartCoroutine(TransitionToNightRoutine());
         }
+    }
+
+    public void startDay()
+    {
+        currentPhase = GamePhase.Day;
+        currentAP = maxAP;
+
+        if (nextDayButton != null)
+            nextDayButton.gameObject.SetActive(false);
+
+        LogInfo("¡Comienza el día " + dayCount + "! Tienes " + currentAP + " AP.");
+        UpdateUI();
+    }
+
+    public void EndDay()
+    {
+        if (currentPhase == GamePhase.Night) return ;
+        currentPhase = GamePhase.Night;
+
+
+        if (nextDayButton != null)
+            nextDayButton.gameObject.SetActive(true);
+
+        LogInfo("¡Ha terminado el día " + dayCount + "! Prepárate para la noche.");
+        UpdateUI();
+    }
+
+    public void OnNextDayButtonPressed()
+    {
+        dayCount++;
+        startDay();
     }
     
     // --- NUEVA RUTINA DE TRANSICIÓN ---
