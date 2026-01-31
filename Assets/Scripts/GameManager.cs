@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections; // Necesario para IEnumerator
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 
@@ -31,28 +31,30 @@ public class GameManager : MonoBehaviour
     public int currentAP = 3;
     public int maxAP = 3;
     public int playerLives = 3;
-    public int maxLives = 3 ;
+    public int maxLives = 3;
     public int totalCardsInGame = 9;
 
     public bool isExecutionMode = false;
-    private bool isTransitioning = false; // Para evitar clics durante el cambio
+    private bool isTransitioning = false;
 
     [Header("UI References")]
     public TextMeshProUGUI apText;
     public TextMeshProUGUI livesText;
     public Image executionButtonImage;
-    public TextMeshProUGUI infoLog;
+    public TextMeshProUGUI infoLog; // El log pequeño (historial)
 
-    [Header("Transición Día/Noche")]
+    [Header("Notificaciones en Pantalla")]
+    public TextMeshProUGUI bigMessageText;       // ARRASTRA AQUÍ TU NUEVO TEXTO
+    public CanvasGroup bigMessageCanvasGroup;    // ARRASTRA AQUÍ EL CANVAS GROUP DEL TEXTO
+    public float messageDuration = 2.0f;         // Cuanto tiempo se queda el mensaje en pantalla
+
     [Header("Transición Día/Noche")]
     public CanvasGroup fadePanel;
     public Animator backgroundAnimator;
     public float fadeDuration = 1.0f;
 
-    public void LogInfo(string message)
-    {
-        infoLog.text += "\n> " + message;
-    }
+    // Variable para controlar la corrutina de texto y que no se solapen bruscamente
+    private Coroutine currentMessageRoutine;
 
     void Awake()
     {
@@ -62,17 +64,74 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         UpdateUI();
-        // Aseguramos que el panel empieza transparente
+        
+        // Configuración inicial de UI
         if (fadePanel != null) 
         {
             fadePanel.alpha = 0;
             fadePanel.blocksRaycasts = false;
         }
+        if (bigMessageCanvasGroup != null)
+        {
+            bigMessageCanvasGroup.alpha = 0; // Texto invisible al inicio
+            bigMessageCanvasGroup.blocksRaycasts = false;
+        }
+
+        // Mostrar Día 1 al iniciar
+        ShowOnScreenMessage("Día " + dayCount);
     }
 
-    public void ToggleExecutionMode()
+    // Esta función ahora muestra el texto en pantalla Y lo guarda en el log pequeño
+    public void LogInfo(string message)
     {
-        if (isTransitioning) return; // No permitir cambios durante la transición
+        // 1. Log pequeño (Historial)
+        if (infoLog != null) infoLog.text = "> " + message;
+
+        // 2. Texto Grande en Pantalla
+        ShowOnScreenMessage(message);
+    }
+
+    public void ShowOnScreenMessage(string message)
+    {
+        if (bigMessageText == null || bigMessageCanvasGroup == null) return;
+
+        // Si ya hay un mensaje mostrándose, lo paramos para mostrar el nuevo
+        if (currentMessageRoutine != null) StopCoroutine(currentMessageRoutine);
+        
+        currentMessageRoutine = StartCoroutine(ShowMessageRoutine(message));
+    }
+
+    IEnumerator ShowMessageRoutine(string msg)
+    {
+        bigMessageText.text = msg;
+
+        // FADE IN (Aparición rápida)
+        float t = 0;
+        while(t < 0.2f)
+        {
+            t += Time.deltaTime;
+            bigMessageCanvasGroup.alpha = Mathf.Lerp(0, 1, t / 0.2f);
+            yield return null;
+        }
+        bigMessageCanvasGroup.alpha = 1;
+
+        // ESPERA (Lectura)
+        yield return new WaitForSeconds(messageDuration);
+
+        // FADE OUT (Desaparición suave)
+        t = 0;
+        while (t < 0.5f)
+        {
+            t += Time.deltaTime;
+            bigMessageCanvasGroup.alpha = Mathf.Lerp(1, 0, t / 0.5f);
+            yield return null;
+        }
+        bigMessageCanvasGroup.alpha = 0;
+    }
+
+    public void ToggleExecutionMode(bool showMessage = true)
+    {
+        if (isTransitioning) return;
 
         isExecutionMode = !isExecutionMode;
 
@@ -81,8 +140,11 @@ public class GameManager : MonoBehaviour
             executionButtonImage.color = isExecutionMode ? Color.red : Color.white;
         }
 
-        if(isExecutionMode) LogInfo("Execution mode active");
-        else LogInfo("Investigation mode active");
+        if (showMessage)
+        {
+            if (isExecutionMode) LogInfo("MODO EJECUCIÓN ACTIVADO");
+            else LogInfo("Modo Investigación");
+        }
     }
 
     public Sprite GetSpriteForRole(RoleType roleToFind)
@@ -114,24 +176,17 @@ public class GameManager : MonoBehaviour
         if (currentAP <= 0)
         {
             currentAP = 0;
-            Debug.Log("¡SE ACABÓ EL DÍA! -> Iniciando transición a Noche Animada...");
             StartCoroutine(TransitionToNightRoutine());
         }
     }
-
-    
     
     IEnumerator TransitionToNightRoutine()
     {
-        // BLOQUEO TOTAL AL JUGADOR
         isTransitioning = true;
         if (fadePanel != null) fadePanel.blocksRaycasts = true; 
 
-        LogInfo("Cae la noche...");
-
-        // ---------------------------------------------
-        // FASE 1: IR A DORMIR (Día -> Negro)
-        // ---------------------------------------------
+        // --- FASE 1: IR A DORMIR ---
+        LogInfo("Cae la noche..."); // Esto mostrará el texto grande también
         float timer = 0f;
         while (timer < fadeDuration)
         {
@@ -141,14 +196,11 @@ public class GameManager : MonoBehaviour
         }
         if (fadePanel != null) fadePanel.alpha = 1f;
 
-        // CAMBIO VISUAL A NOCHE
         if (backgroundAnimator != null) backgroundAnimator.SetBool("esNoche", true);
         
-        yield return new WaitForSeconds(0.5f); // Pequeña pausa en negro total
+        yield return new WaitForSeconds(0.5f);
 
-        // ---------------------------------------------
-        // FASE 2: MOSTRAR LA NOCHE (Negro -> Noche visible)
-        // ---------------------------------------------
+        // --- FASE 2: MOSTRAR LA NOCHE ---
         timer = 0f;
         while (timer < fadeDuration)
         {
@@ -157,15 +209,11 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        // ---------------------------------------------
-        // FASE 3: ESPERA DE 5 SEGUNDOS (El jugador mira, no toca)
-        // ---------------------------------------------
-        LogInfo("Es de noche... Los demonios acechan.");
-        yield return new WaitForSeconds(5.0f); 
+        // --- FASE 3: NOCHE (5 Segundos) ---
+        // Aquí podrías poner un mensaje de "Turno de los Demonios" si quisieras
+        yield return new WaitForSeconds(2.0f); 
 
-        // ---------------------------------------------
-        // FASE 4: AMANECER (Noche -> Negro)
-        // ---------------------------------------------
+        // --- FASE 4: AMANECER ---
         timer = 0f;
         while (timer < fadeDuration)
         {
@@ -175,19 +223,20 @@ public class GameManager : MonoBehaviour
         }
         if (fadePanel != null) fadePanel.alpha = 1f;
 
-        // CAMBIO VISUAL A DÍA y RESET DE JUEGO
+        // <--- AQUÍ INCREMENTAMOS EL DÍA --->
         if (backgroundAnimator != null) backgroundAnimator.SetBool("esNoche", false);
         
-        // ¡IMPORTANTE! RECUPERAR LOS PUNTOS DE ACCIÓN (AP)
+        dayCount++; // Subimos el contador
         currentAP = maxAP; 
         UpdateUI();
-        LogInfo("Amanece un nuevo día.");
+        
+        // <--- MOSTRAMOS EL TEXTO DE NUEVO DÍA --->
+        // Usamos una duración un poco más larga para el título del día
+        ShowOnScreenMessage("DÍA " + dayCount); 
 
-        yield return new WaitForSeconds(0.5f); // Pequeña pausa en negro total
+        yield return new WaitForSeconds(1.0f); // Pausa un poco más larga en negro para leer "Día X"
 
-        // ---------------------------------------------
-        // FASE 5: VOLVER A JUGAR (Negro -> Día visible)
-        // ---------------------------------------------
+        // --- FASE 5: VOLVER A JUGAR ---
         timer = 0f;
         while (timer < fadeDuration)
         {
@@ -196,7 +245,6 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         
-        // DESBLOQUEO DEL JUGADOR
         if (fadePanel != null) 
         {
             fadePanel.alpha = 0f;
@@ -213,7 +261,8 @@ public class GameManager : MonoBehaviour
 
         if (playerLives <= 0)
         {
-            LogInfo("GAME OVER");
+            // Puedes crear una función específica de Game Over si quieres
+            ShowOnScreenMessage("GAME OVER");
         }
     }
 
