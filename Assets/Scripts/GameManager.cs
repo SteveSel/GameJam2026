@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     public int playerLives = 3;
     public int maxLives = 3 ;
     public int totalCardsInGame = 9;
+    public bool isGameOver = false;
 
     public bool isExecutionMode = false;
     private bool isTransitioning = false; // Para evitar clics durante el cambio
@@ -129,9 +130,6 @@ public class GameManager : MonoBehaviour
 
         LogInfo("Cae la noche...");
 
-        // ---------------------------------------------
-        // FASE 1: IR A DORMIR (Día -> Negro)
-        // ---------------------------------------------
         float timer = 0f;
         while (timer < fadeDuration)
         {
@@ -158,10 +156,9 @@ public class GameManager : MonoBehaviour
         }
 
         // ---------------------------------------------
-        // FASE 3: ESPERA DE 5 SEGUNDOS (El jugador mira, no toca)
+        // FASE 3: ESPERA DE 2 SEGUNDOS (El jugador mira, no toca)
         // ---------------------------------------------
-        LogInfo("Es de noche... Los demonios acechan.");
-        yield return new WaitForSeconds(5.0f); 
+        yield return new WaitForSeconds(2.0f); 
 
         // ---------------------------------------------
         // FASE 4: AMANECER (Noche -> Negro)
@@ -181,7 +178,6 @@ public class GameManager : MonoBehaviour
         // ¡IMPORTANTE! RECUPERAR LOS PUNTOS DE ACCIÓN (AP)
         currentAP = maxAP; 
         UpdateUI();
-        LogInfo("Amanece un nuevo día.");
 
         yield return new WaitForSeconds(0.5f); // Pequeña pausa en negro total
 
@@ -211,9 +207,49 @@ public class GameManager : MonoBehaviour
         if (apText != null) apText.text = $"AP: {currentAP} / {maxAP}";
         if (livesText != null) livesText.text = $"HP: {playerLives}";
 
-        if (playerLives <= 0)
+        if (playerLives <= 0 && !isGameOver)
         {
-            LogInfo("GAME OVER");
+            TriggerGameOver(false);
+        }
+    }
+
+    public int CountAliveDemons()
+    {
+        CardLogic[] allCards = FindObjectsByType<CardLogic>(FindObjectsSortMode.None);
+        int count = 0;
+        foreach (CardLogic card in allCards)
+        {
+            if (card.realRole == RoleType.Imp && !card.isDead)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void CheckWinCondition()
+    {
+        int demonsLeft = CountAliveDemons();
+
+        if (demonsLeft == 0 && !isGameOver)
+        {
+            TriggerGameOver(true);
+        }
+    }
+
+    public void TriggerGameOver(bool victory)
+    {
+        isGameOver = true;
+
+        if (executionButtonImage != null) executionButtonImage.gameObject.SetActive(false);
+
+        if (victory)
+        {
+            LogInfo("¡VICTORY! You killed all demons.");
+        }
+        else
+        {
+            LogInfo("DEFEAT... You ran out of HP.");
         }
     }
 

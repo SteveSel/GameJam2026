@@ -743,16 +743,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   roleLibrary:
   - role: 0
-    artwork: {fileID: 0}
+    artwork: {fileID: 1704136824156536098, guid: 33b3b79346ba29e4c91559eb92d33da2, type: 3}
     description: 
   - role: 1
-    artwork: {fileID: 0}
+    artwork: {fileID: -3152180383845805149, guid: 1f7332afddecd784f89a77d52b8fdc90, type: 3}
     description: 
   - role: 2
-    artwork: {fileID: 0}
+    artwork: {fileID: 2752675982035780481, guid: 9bca24df1dd32ea4bae9f2026016b0e5, type: 3}
     description: 
   - role: 3
-    artwork: {fileID: 0}
+    artwork: {fileID: -3333213965643037966, guid: 4af413528295ef142925c24052bdb931, type: 3}
     description: 
   currentPhase: 0
   dayCount: 1
@@ -767,7 +767,7 @@ MonoBehaviour:
   executionButtonImage: {fileID: 1517317878}
   infoLog: {fileID: 546347783}
   fadePanel: {fileID: 1656210366}
-  backgroundAnimator: {fileID: 0}
+  backgroundAnimator: {fileID: 22997588}
   fadeDuration: 2
 --- !u!114 &560755282
 MonoBehaviour:
@@ -902,7 +902,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -182.99988, y: 33.000008}
+  m_AnchoredPosition: {x: -182.99988, y: 32.999973}
   m_SizeDelta: {x: 183, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &696475602
