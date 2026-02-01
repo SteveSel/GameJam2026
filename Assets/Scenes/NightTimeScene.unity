@@ -2050,7 +2050,7 @@ MonoBehaviour:
     description: Demonio de alto rango. Se disfraza y miente. Sus vecinos mienten
       siempre (los corrompe).
   - role: 12
-    artwork: {fileID: -1081563456115174823, guid: 5061245b1ea2d10879a7f42ac28f596a, type: 3}
+    artwork: {fileID: 68695456585991590, guid: 0f17407d4d4a1ae9eb11c00d73860c7e, type: 3}
     description: "Demonio de alto rango. Se disfraza y miente. Si est\xE1 vivo de
       noche te resta 1Ap el dia siguiente."
   - role: 14
