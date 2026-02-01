@@ -11,9 +11,9 @@ public class CardDealer : MonoBehaviour
     [Header("Configuración de Nivel (Mazo)")]
     public int totalCartas = 9;
     [Tooltip("Roles que SIEMPRE aparecerán")]
-    public List<RoleType> rolesObligatorios; // Antes 'specialRoles'
+    public List<RoleType> rolesObligatorios; 
     [Tooltip("Roles para rellenar los huecos que falten")]
-    public List<RoleType> rolesRelleno;      // Antes 'fillerRoles'
+    public List<RoleType> rolesRelleno;      
 
     [Header("Configuración Visual")]
     [Range(0.1f, 1.5f)] public float escalaCarta = 0.4f; 
@@ -71,7 +71,6 @@ public class CardDealer : MonoBehaviour
                 logic.SetupCard(mazo[i], i + 1);
             }
 
-            // C. Posicionamiento Matemático
             bool esCirculoCompleto = Mathf.Abs(anguloInicio - anguloFin) >= 360f;
 
             float t;
