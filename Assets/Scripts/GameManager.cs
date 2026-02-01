@@ -71,9 +71,9 @@ public class GameManager : MonoBehaviour
     public float fadeDuration = 1.0f;
 
     [Header("Game Over UI")]
-    public GameObject gameOverPanel ;
-    public TextMeshProUGUI resultTitle ;
-    public TextMeshProUGUI statsSummary ;
+    public GameOverUI gameOverScreen ;
+    //public TextMeshProUGUI resultTitle ;
+    //public TextMeshProUGUI statsSummary ;
 
     [Header("Ambient Audio")]
     // sonidos día
@@ -451,7 +451,7 @@ public class GameManager : MonoBehaviour
         int count = 0;
         foreach (CardLogic card in allCards)
         {
-            if (card.realRole == RoleType.Imp || IsHighRankDemon(card.realRole))
+            if ((card.realRole == RoleType.Imp || IsHighRankDemon(card.realRole)) && !card.isDead)
             {
                 count++;
             }
@@ -576,18 +576,12 @@ public class GameManager : MonoBehaviour
 
         if (executionButtonImage != null) executionButtonImage.gameObject.SetActive(false);
 
-        if (gameOverPanel != null) {
-            gameOverPanel.SetActive(true);
-        
-            if (resultTitle != null) {
-                resultTitle.text = victory ? "¡VICTORIA!" : "DERROTA...";
-                resultTitle.color = victory ? Color.green : Color.red;
-            }
-            if (statsSummary != null) {
-                // Aquí puedes añadir más estadísticas si lo deseas
-                statsSummary.text = $"Días sobrevividos: {dayCount}\n";
-            }
+        if (gameOverScreen != null)
+
+        {
+            gameOverScreen.ShowGameOver(victory);
         }
+        
         if (victory) LogInfo("¡Has eliminado a todos los demonios!"); 
         else LogInfo("Has perdido todas tus vidas...");
     }

@@ -3,8 +3,9 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
-public class CardLogic : MonoBehaviour
+public class CardLogic : MonoBehaviour, IPointerClickHandler
 {
     [Header("Identidad")]
     public RoleType realRole;
@@ -25,6 +26,13 @@ public class CardLogic : MonoBehaviour
     public Animator coverAnimator; 
     public TextMeshProUGUI idText;
     public Button myButton;
+
+    [Header("Player Marks")]
+    public GameObject markSuspect; 
+    public GameObject markGood;    
+    public GameObject markEvil;    
+     
+    private int currentMarkState = 0;
 
     public void SetupCard(RoleType assignedRole, int newID)
     {
@@ -122,7 +130,7 @@ public class CardLogic : MonoBehaviour
         {
             if (GameManager.Instance.currentInvestigator == this)
             {
-                GameManager.Instance.LogInfo("Investigator: 'Cancelando investigación...'");
+                GameManager.Instance.LogInfo("'Cancelando...'");
                 GameManager.Instance.isInvestigating = false;
                 GameManager.Instance.currentInvestigator = null;
                 return;
@@ -207,7 +215,10 @@ public class CardLogic : MonoBehaviour
 
         StartCoroutine(BurnRoutine());
 
-        if (myButton != null) myButton.image.color = Color.gray;
+        if (myButton != null) {
+            myButton.image.color = Color.gray;
+            myButton.interactable = true ;
+        }
         if (roleIcon != null) roleIcon.color = Color.gray;
 
         if (IsDemon(realRole))
@@ -586,6 +597,46 @@ public class CardLogic : MonoBehaviour
         else
         {
             GameManager.Instance.LogInfo("Torchbearer: 'La luz brilla con fuerza...'");
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            if (GameManager.Instance.isGameOver) return;
+
+            CycleMark();
+        }
+    }
+
+    void CycleMark()
+    {
+        currentMarkState++;
+        if (currentMarkState > 3) currentMarkState = 0; 
+
+        UpdateMarkVisuals();
+    }
+
+    void UpdateMarkVisuals()
+    {
+        
+        if (markSuspect != null) markSuspect.SetActive(false);
+        if (markGood != null) markGood.SetActive(false);
+        if (markEvil != null) markEvil.SetActive(false);
+
+       
+        switch (currentMarkState)
+        {
+            case 1:
+                if (markSuspect != null) markSuspect.SetActive(true);
+                break;
+            case 2:
+                if (markGood != null) markGood.SetActive(true);
+                break;
+            case 3:
+                if (markEvil != null) markEvil.SetActive(true);
+                break;
         }
     }
 }
