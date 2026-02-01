@@ -198,7 +198,7 @@ public class CardLogic : MonoBehaviour
 
         if (IsDemon(realRole))
         {
-            GameManager.Instance.LogInfo($"¡JUSTICE! You executed card #{cardID}. IT WAS A DEMON.");
+            GameManager.Instance.LogInfo($"¡JUSTICIA! Ejecutaste a #{cardID}. ERA UN DEMONIO.");
             if (roleIcon != null) roleIcon.color = new Color(1f, 0.5f, 0.5f);
             GameManager.Instance.CheckWinCondition();
         }
@@ -258,7 +258,7 @@ public class CardLogic : MonoBehaviour
         
         GameManager.Instance.UseAP(1);
         
-        GameManager.Instance.LogInfo($"Investigación: La carta #{cardID} parece {disguisedRole}");
+        GameManager.Instance.LogInfo($"La carta #{cardID} parece {disguisedRole}");
     }
 
     public void UseAbility()
@@ -362,7 +362,7 @@ public class CardLogic : MonoBehaviour
         }
         else
         {
-            GameManager.Instance.LogInfo($"Scribe: 'Detecto exactamente {realCount} presencias oscuras.'");
+            GameManager.Instance.LogInfo($"Scribe: 'Detecto {realCount} presencias oscuras...'");
         }
     }
 
@@ -385,17 +385,14 @@ public class CardLogic : MonoBehaviour
 
         if (amILying)
         {
-            // MIENTO: Digo lo contrario
-            // Si es Demonio -> Digo "Es un Villager"
-            // Si es Villager -> Digo "Es un Demonio"
             string lie = targetIsDemon ? "un VILLAGER" : "un DEMONIO";
-            GameManager.Instance.LogInfo($"Queen: 'Mi intuición real dice que #{targetID} es {lie}'");
+            GameManager.Instance.LogInfo($"Queen: 'Declaro que la carta #{targetID} es {lie}'");
         }
         else
         {
             // VERDAD
             string truth = targetIsDemon ? "un DEMONIO" : "un VILLAGER";
-            GameManager.Instance.LogInfo($"Quees: 'Declaro que la carta #{targetID} es {truth}'");
+            GameManager.Instance.LogInfo($"Queen: 'Declaro que la carta #{targetID} es {truth}'");
         }
     }
 
@@ -452,7 +449,7 @@ public class CardLogic : MonoBehaviour
             }
             else
             {
-                GameManager.Instance.LogInfo("Medium: 'Los espíritus están confusos... (No encuentro el patrón 1 Demonio + 2 Aldeanos)'");
+                GameManager.Instance.LogInfo("Medium: 'Los espíritus están confusos...'");
                 return;
             }
         }
@@ -580,7 +577,6 @@ public class CardLogic : MonoBehaviour
         if (demonFound)
         {
             GameManager.Instance.LogInfo("Torchbearer: '¡HAY UN DEMONIO CERCA! ¡AAARGH!' (Se quema)");
-            // Se sacrifica
             DieSilently();
             GameManager.Instance.UpdateUI();
         }
