@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
     [Header("UI References")]
     public TextMeshProUGUI apText;
     public TextMeshProUGUI livesText;
+    public TextMeshProUGUI demonCounterText;
     public Image executionButtonImage;
     public Image sleepButtonImage;
     public TextMeshProUGUI infoLog;
@@ -93,13 +94,17 @@ public class GameManager : MonoBehaviour
     
     private Coroutine currentMessageRoutine;
 
+    private int totalStartingDemons = 0 ;
+
     void Awake()
     {
         Instance = this;
     }
 
-    void Start()
+    IEnumerator Start()
     {
+        yield return new WaitForSeconds(0.1f);
+        totalStartingDemons = CountRealDemons();
         UpdateUI();
         
         // Configuración inicial de UI
@@ -438,7 +443,10 @@ public class GameManager : MonoBehaviour
     {
         if (apText != null) apText.text = $"AP: {currentAP} / {maxAP}";
         if (livesText != null) livesText.text = $"HP: {playerLives}";
-
+        if (demonCounterText != null) {
+            demonCounterText.text = $"Demons: {CountAliveDemons()} / {totalStartingDemons}";
+        }
+        
         if (playerLives <= 0 && !isGameOver)
         {
             TriggerGameOver(false);
