@@ -70,6 +70,23 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI resultTitle ;
     public TextMeshProUGUI statsSummary ;
 
+    [Header("Ambient Audio")]
+    // sonidos día
+    public AudioSource dayAmbience;
+    public AudioSource dayVillage;
+    //sonidos noche
+    public AudioSource nightAmbience;
+    public AudioSource nightCrickets;
+    public AudioSource nightWind ;
+    public AudioSource nightCracking ;
+
+    [Header("Efectos de Sonido (SFX)")]
+    public AudioSource sfxSource;
+
+    public AudioClip flipSound;
+    public AudioClip killSound;
+    
+
     // Variable para controlar la corrutina de texto y que no se solapen bruscamente
     private Coroutine currentMessageRoutine;
 
@@ -220,6 +237,14 @@ public class GameManager : MonoBehaviour
     IEnumerator TransitionToNightRoutine()
     {
         isTransitioning = true;
+
+        if (dayAmbience != null) dayAmbience.Stop();
+        if (dayVillage != null) dayVillage.Pause();
+        if (nightAmbience != null) nightAmbience.Play();
+        if (nightCrickets != null) nightCrickets.Play();
+        if (nightWind != null) nightWind.Play();
+        if (nightCracking != null) nightCracking.Play();
+
         if (fadePanel != null) fadePanel.blocksRaycasts = true; 
 
         LogInfo("Cae la noche...");
@@ -334,6 +359,14 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         if (fadePanel != null) fadePanel.alpha = 1f;
+
+
+        if (nightAmbience != null) nightAmbience.Stop();
+        if (dayVillage != null) dayVillage.UnPause();
+        if (dayAmbience != null) dayAmbience.Play();
+        if (nightCrickets != null) nightCrickets.Stop();
+        if (nightWind != null) nightWind.Stop();
+        if (nightCracking != null) nightCracking.Stop();
 
         // <--- AQUÍ INCREMENTAMOS EL DÍA --->
         if (backgroundAnimator != null) backgroundAnimator.SetBool("esNoche", false);
@@ -676,6 +709,14 @@ public class GameManager : MonoBehaviour
         int wrappedIndex = (targetIndex % totalCardsInGame + totalCardsInGame) % totalCardsInGame;
 
         return wrappedIndex + 1;
+    }
+
+    public void playSFX(AudioClip clip)
+    {
+        if (sfxSource != null && clip != null)
+        {
+            sfxSource.PlayOneShot(clip);
+        }
     }
 
 }
