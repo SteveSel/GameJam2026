@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: 5eaa902ec37cab98b9ff417600f20e6e
+guid: 41a0db31bb2b503b19bdc0fafe4e5d59
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4264029087578421448
-    second: BackFaceCard_0
+      213: -6800608469628864742
+    second: burn13_0
+  - first:
+      213: -3145507751579876060
+    second: burn13_1
+  - first:
+      213: -7040128684613810205
+    second: burn13_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +119,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BackFaceCard_0
+      name: burn13_2
       rect:
         serializedVersion: 2
         x: 0
@@ -121,15 +127,15 @@ TextureImporter:
         width: 350
         height: 600
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 83784faf22023d4c0800000000000000
-      internalID: -4264029087578421448
+      spriteID: 3e74e84f2407c4e90800000000000000
+      internalID: -7040128684613810205
       vertices: []
       indices: 
       edges: []
@@ -138,7 +144,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 518945ac2b195f7cba64d22f7b503e73
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +154,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BackFaceCard_0: -4264029087578421448
+      burn13_0: -6800608469628864742
+      burn13_1: -3145507751579876060
+      burn13_2: -7040128684613810205
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
