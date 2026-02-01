@@ -8,37 +8,37 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MainMenu.unity
     guid: 366528f7659fad6f2a61180a195955ef
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/LevelSelector.unity
     guid: 0036ef4d0ee8434aea879828c296cb65
   - enabled: 0
     path: Assets/Scenes/Custom.unity
     guid: f0030cda59662b10b91018f3d61fe16c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/modeSelection.unity
     guid: e664c058310b8b8bc93aca1ca1a9f702
   - enabled: 0
     path: Assets/Scenes/NightTimeScene.unity
     guid: aa2ddcb340134cdf2849f589b7abbba2
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Custom1.unity
     guid: 8c464597f14cc5f7eb8c3fe3bcea65e7
   - enabled: 0
     path: Assets/Scenes/DayTimeScene.unity
     guid: eead89be6fecf8cb3bb9341ae6aa6739
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Lvl6.unity
     guid: e46ff48479214bb46a42829ff28516df
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Lvl1.unity
     guid: ac9dbc5fdfa397744923a22d920856f7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Lvl2.unity
     guid: 72ca4ae1af978e640b56f5a121f93ad4
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Lvl3.unity
     guid: 0c87e09873a6dfe4688fba4694ac6565
   - enabled: 1
