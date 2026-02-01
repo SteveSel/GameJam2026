@@ -55,11 +55,6 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI expandedLogText; 
     public ScrollRect expandedLogScroll;
 
-    [Header("UI Guía / Enciclopedia")]
-    public GameObject guidePanel;
-    public Transform guideContentParent;
-    public GameObject guideEntryPrefab;
-
     [Header("Notificaciones en Pantalla")]
     public TextMeshProUGUI bigMessageText;
     public CanvasGroup bigMessageCanvasGroup;
@@ -112,21 +107,19 @@ public class GameManager : MonoBehaviour
         }
         if (bigMessageCanvasGroup != null)
         {
-            bigMessageCanvasGroup.alpha = 0;
+            bigMessageCanvasGroup.alpha = 0; // Texto invisible al inicio
             bigMessageCanvasGroup.blocksRaycasts = false;
         }
-
-        GenerateGuideUI();
-
-        if (guidePanel != null) guidePanel.SetActive(false);
 
         if (expandedLogPanel != null) expandedLogPanel.SetActive(false);
         if (infoLog != null) infoLog.text = "Inicio de la partida...";
         if (expandedLogText != null) expandedLogText.text = "--- HISTORIAL DE LA PARTIDA ---\n";
 
+        // Mostrar Día 1 al iniciar
         ShowOnScreenMessage("Día " + dayCount);
     }
 
+    // Esta función ahora muestra el texto en pantalla Y lo guarda en el log pequeño
     public void LogInfo(string message)
     {
         // 1. Log pequeño (Historial)
@@ -155,32 +148,6 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         if (expandedLogScroll != null) expandedLogScroll.verticalNormalizedPosition = 0f;
-    }
-
-    void GenerateGuideUI()
-    {
-        if (guideContentParent == null || guideEntryPrefab == null) return;
-
-        foreach (Transform child in guideContentParent) Destroy(child.gameObject);
-
-        foreach (var roleData in roleLibrary)
-        {
-            GameObject newEntry = Instantiate(guideEntryPrefab, guideContentParent);
-            GuideEntry logic = newEntry.GetComponent<GuideEntry>();
-            if (logic != null)
-            {
-                logic.Setup(roleData);
-            }
-        }
-    }
-
-    public void ToggleGuide()
-    {
-        if (guidePanel != null)
-        {
-            bool isActive = guidePanel.activeSelf;
-            guidePanel.SetActive(!isActive);
-        }
     }
 
     public void ShowOnScreenMessage(string message)
@@ -458,7 +425,7 @@ public class GameManager : MonoBehaviour
         return count;
     }
 
-    public bool IsDemon(RoleType role)
+    bool IsDemon(RoleType role)
     {
         return role == RoleType.Imp || role == RoleType.Lucifer || role == RoleType.Mammon || role == RoleType.Asmodeus
             || role == RoleType.Satan || role == RoleType.Beelzebub || role == RoleType.Belphegor || role == RoleType.Leviathan;
