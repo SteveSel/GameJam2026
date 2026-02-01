@@ -386,7 +386,7 @@ public class CardLogic : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            GameManager.Instance.LogInfo($"Scribe: 'Detecto exactamente {realCount} presencias oscuras.'");
+            GameManager.Instance.LogInfo($"Scribe: 'Detecto {realCount} presencias oscuras...'");
         }
     }
 
@@ -409,12 +409,12 @@ public class CardLogic : MonoBehaviour, IPointerClickHandler
         if (amILying)
         {
             string lie = targetIsDemon ? "un VILLAGER" : "un DEMONIO";
-            GameManager.Instance.LogInfo($"Queen: 'Mi intuición real dice que #{targetID} es {lie}'");
+            GameManager.Instance.LogInfo($"Queen: 'Declaro que la carta #{targetID} es {lie}'");
         }
         else
         {
             string truth = targetIsDemon ? "un DEMONIO" : "un VILLAGER";
-            GameManager.Instance.LogInfo($"Quees: 'Declaro que la carta #{targetID} es {truth}'");
+            GameManager.Instance.LogInfo($"Queen: 'Declaro que la carta #{targetID} es {truth}'");
         }
     }
 

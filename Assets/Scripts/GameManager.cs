@@ -73,8 +73,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Over UI")]
     public GameOverUI gameOverScreen ;
-    //public TextMeshProUGUI resultTitle ;
-    //public TextMeshProUGUI statsSummary ;
 
     [Header("Ambient Audio")]
     // sonidos día
@@ -126,7 +124,6 @@ public class GameManager : MonoBehaviour
         if (infoLog != null) infoLog.text = "Inicio de la partida...";
         if (expandedLogText != null) expandedLogText.text = "--- HISTORIAL DE LA PARTIDA ---\n";
 
-        // Mostrar Día 1 al iniciar
         ShowOnScreenMessage("Día " + dayCount);
     }
 
@@ -161,11 +158,10 @@ public class GameManager : MonoBehaviour
     // Esta función ahora muestra el texto en pantalla Y lo guarda en el log pequeño
     public void LogInfo(string message)
     {
-        // 1. Log pequeño (Historial)
+        
         if (infoLog != null) infoLog.text += $"[Día {dayCount}] {message} \n";
         if (expandedLogText != null) expandedLogText.text += $"[Día {dayCount}] {message} \n";
         
-        // 2. Texto Grande en Pantalla
         ShowOnScreenMessage(message);
     }
 
@@ -301,7 +297,6 @@ public class GameManager : MonoBehaviour
         
         yield return new WaitForSeconds(0.5f);
 
-        // --- FASE 2: MOSTRAR LA NOCHE ---
         timer = 0f;
         while (timer < fadeDuration)
         {
@@ -389,7 +384,6 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
 
-        // --- FASE 4: AMANECER ---
         timer = 0f;
         while (timer < fadeDuration)
         {
@@ -407,21 +401,17 @@ public class GameManager : MonoBehaviour
         if (nightWind != null) nightWind.Stop();
         if (nightCracking != null) nightCracking.Stop();
 
-        // <--- AQUÍ INCREMENTAMOS EL DÍA --->
         if (backgroundAnimator != null) backgroundAnimator.SetBool("esNoche", false);
         
-        dayCount++; // Subimos el contador
+        dayCount++; 
         currentAP = maxAP - apPenalty - permanentAPPenalty;
         if (currentAP <= 0) currentAP = 0;
         UpdateUI();
         
-        // <--- MOSTRAMOS EL TEXTO DE NUEVO DÍA --->
-        // Usamos una duración un poco más larga para el título del día
         ShowOnScreenMessage("DÍA " + dayCount); 
 
-        yield return new WaitForSeconds(1.0f); // Pausa un poco más larga en negro para leer "Día X"
-
-        // --- FASE 5: VOLVER A JUGAR ---
+        yield return new WaitForSeconds(1.0f); 
+       
         timer = 0f;
         while (timer < fadeDuration)
         {
