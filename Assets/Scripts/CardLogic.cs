@@ -140,6 +140,7 @@ public class CardLogic : MonoBehaviour
 
         if (GameManager.Instance.isExecutionMode)
         {
+            GameManager.Instance.playSFX(GameManager.Instance.killSound);
             ExecuteThisCard();
         }
         else
@@ -153,6 +154,7 @@ public class CardLogic : MonoBehaviour
 
             if (!isRevealed)
             {
+                GameManager.Instance.playSFX(GameManager.Instance.flipSound);
                 RevealCard();
             }
             else
