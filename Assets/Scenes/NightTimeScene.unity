@@ -2121,7 +2121,7 @@ MonoBehaviour:
   nightWind: {fileID: 1486765211}
   nightCracking: {fileID: 1919044309}
   sfxSource: {fileID: 1500910735}
-  flipSound: {fileID: 8300000, guid: 3008f59a7b4fe764e951736df277ebd6, type: 3}
+  flipSound: {fileID: 8300000, guid: 8922697426f8a0d4bb0f26567650ce5c, type: 3}
   killSound: {fileID: 8300000, guid: c2101aff3e679b84e93bba42fa8c5dbe, type: 3}
 --- !u!114 &560755282
 MonoBehaviour:
@@ -3652,7 +3652,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 644613041}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.9999998
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
