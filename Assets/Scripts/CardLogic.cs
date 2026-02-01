@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections;
 using System.Collections.Generic;
 
 public class CardLogic : MonoBehaviour
@@ -22,7 +21,6 @@ public class CardLogic : MonoBehaviour
     [Header("Referencias UI")]
     public Image roleIcon;
     public GameObject backCover;
-    public Animator coverAnimator; 
     public TextMeshProUGUI idText;
     public Button myButton;
 
@@ -42,11 +40,7 @@ public class CardLogic : MonoBehaviour
             if (roleIcon != null) roleIcon.sprite = disguiseSprite;
         }
 
-        if (backCover != null) 
-        {
-            backCover.SetActive(true);
-            if (coverAnimator != null) coverAnimator.Rebind();
-        }
+        if (backCover != null) backCover.SetActive(true);
         
         isRevealed = false;
         isDead = false;
@@ -75,12 +69,13 @@ public class CardLogic : MonoBehaviour
         foreach (int id in neighbors)
         {
             CardLogic neighbor = GameManager.Instance.GetCardByID(id);
+            // Si mi vecino existe y es ASMODEUS...
             if (neighbor != null && neighbor.realRole == RoleType.Asmodeus)
             {
                 return true;
             }
         }
-        return false; 
+        return false; // Estoy sano
     }
 
     RoleType GetRandomVillagerRole()
@@ -101,6 +96,8 @@ public class CardLogic : MonoBehaviour
     public void OnClickCard()
     {
         if (GameManager.Instance.isGameOver) return;
+
+        Debug.Log("Has clicado en la carta #" + cardID + " que es realmente: " + realRole);
 
         if (isBlockedByBelphegor)
         {
@@ -179,32 +176,23 @@ public class CardLogic : MonoBehaviour
         return false;
     }
 
-    IEnumerator BurnRoutine()
-    {
-        if (coverAnimator != null)
-        {
-            coverAnimator.SetTrigger("burn");
-            
-            yield return new WaitForSeconds(2.0f); 
-            
-            if (backCover != null) backCover.SetActive(false);
-        }
-        else
-        {
-            if (backCover != null) backCover.SetActive(false);
-        }
-    }
-
     public void ExecuteThisCard()
     {
         isDead = true;
         isRevealed = true;          
-        
+        backCover.SetActive(false); 
+
+        if (myButton != null) myButton.image.color = Color.gray;
+        if (roleIcon != null) roleIcon.color = Color.gray;
+
         Sprite trueSprite = GameManager.Instance.GetSpriteForRole(realRole);
-        if (roleIcon != null) roleIcon.sprite = trueSprite;
 
-        StartCoroutine(BurnRoutine());
+        if (roleIcon != null)
+        {
+            roleIcon.sprite = trueSprite;
+        }
 
+        //Gris = muerto
         if (myButton != null) myButton.image.color = Color.gray;
         if (roleIcon != null) roleIcon.color = Color.gray;
 
@@ -251,23 +239,24 @@ public class CardLogic : MonoBehaviour
         isDead = true;
         isRevealed = true;
 
+        if (backCover != null) backCover.SetActive(false);
+        if (myButton != null) myButton.image.color = Color.gray;
+
+        // Revelar identidad real
         Sprite trueSprite = GameManager.Instance.GetSpriteForRole(realRole);
         if (roleIcon != null)
         {
             roleIcon.sprite = trueSprite;
             roleIcon.color = Color.gray;
         }
-
-        StartCoroutine(BurnRoutine());
-
-        if (myButton != null) myButton.image.color = Color.gray;
     }
 
     public void RevealCard()
     {
         isRevealed = true;
+        backCover.SetActive(false); 
         
-        StartCoroutine(BurnRoutine());
+        GameManager.Instance.UseAP(1);
         
         GameManager.Instance.LogInfo($"La carta #{cardID} parece {disguisedRole}");
     }
@@ -366,6 +355,7 @@ public class CardLogic : MonoBehaviour
         if (CheckIfCorrupted())
         {
             int fakeCount = realCount + (Random.Range(0, 2) == 0 ? 1 : -1);
+            // Evitar negativos
             if (fakeCount < 0) fakeCount = 0; 
             
             GameManager.Instance.LogInfo($"Scribe: 'Detecto {fakeCount} presencias oscuras...'");
@@ -381,6 +371,7 @@ public class CardLogic : MonoBehaviour
         int totalCards = GameManager.Instance.totalCardsInGame;
         int targetID = cardID;
 
+        // Buscar a otro que no sea yo
         if (totalCards > 1)
         {
             while (targetID == cardID) targetID = Random.Range(1, totalCards + 1);
@@ -399,6 +390,7 @@ public class CardLogic : MonoBehaviour
         }
         else
         {
+            // VERDAD
             string truth = targetIsDemon ? "un DEMONIO" : "un VILLAGER";
             GameManager.Instance.LogInfo($"Queen: 'Declaro que la carta #{targetID} es {truth}'");
         }
@@ -406,6 +398,7 @@ public class CardLogic : MonoBehaviour
 
     void TryToMedium()
     {
+        // Obtener todas las cartas vivas
         List<CardLogic> allCards = GameManager.Instance.GetAllCards();
         List<int> chosenIDs = new List<int>();
 
@@ -419,6 +412,7 @@ public class CardLogic : MonoBehaviour
                 if (!IsDemon(c.realRole) && c.cardID != cardID) innocentIDs.Add(c.cardID);
             }
 
+            // Mezclar
             for (int i = 0; i < innocentIDs.Count; i++)
             {
                 int temp = innocentIDs[i];
@@ -427,6 +421,7 @@ public class CardLogic : MonoBehaviour
                 innocentIDs[r] = temp;
             }
 
+            // Coger hasta 3
             for (int i = 0; i < 3 && i < innocentIDs.Count; i++)
             {
                 chosenIDs.Add(innocentIDs[i]);
@@ -447,9 +442,10 @@ public class CardLogic : MonoBehaviour
             
             if (demons.Count > 0 && villagers.Count >= 2)
             {
-                chosenIDs.Add(demons[Random.Range(0, demons.Count)]); 
-                chosenIDs.Add(villagers[Random.Range(0, villagers.Count)]); 
-                chosenIDs.Add(villagers[Random.Range(0, villagers.Count)]); 
+                chosenIDs.Add(demons[Random.Range(0, demons.Count)]); // 1 Demonio
+                chosenIDs.Add(villagers[Random.Range(0, villagers.Count)]); // Aldeano 1
+                chosenIDs.Add(villagers[Random.Range(0, villagers.Count)]); // Aldeano 2
+                // Puede salir el mismo villager 2 veces en la lista
             }
             else
             {
@@ -460,6 +456,7 @@ public class CardLogic : MonoBehaviour
 
         if (chosenIDs.Count >= 3)
         {
+            // Mezclar
             for (int i = 0; i < chosenIDs.Count; i++)
             {
                 int temp = chosenIDs[i];
@@ -513,6 +510,7 @@ public class CardLogic : MonoBehaviour
 
     void TryToGravekeeper()
     {
+        // Mira rango +/- 2 buscando High Rank
         bool deathNear = false;
         int[] offsets = { -2, -1, 1, 2 };
 
@@ -536,6 +534,7 @@ public class CardLogic : MonoBehaviour
 
         if (amILying)
         {
+            // Si soy malo, siempre me callo
             GameManager.Instance.LogInfo("Gravekeeper: '...' (Silencio sepulcral)");
         }
         else
@@ -559,6 +558,7 @@ public class CardLogic : MonoBehaviour
             return;
         }
 
+        // Si soy bueno, miro a mis vecinos
         int leftID = GameManager.Instance.GetCircularID(cardID, -1);
         int rightID = GameManager.Instance.GetCircularID(cardID, 1);
         int[] neighbors = { leftID, rightID };
