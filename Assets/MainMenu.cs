@@ -5,7 +5,7 @@ public class MainMenu : MonoBehaviour
 {
     public void Jugar()
     {
-        SceneManager.LoadScene("modeSelection");
+        SceneManager.LoadScene("LevelSelector");
     }
 
     public void Settings()
