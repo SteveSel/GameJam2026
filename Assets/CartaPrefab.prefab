@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 5254803874977667448}
   - component: {fileID: 8369063550817810531}
   - component: {fileID: 9181375769822130706}
+  - component: {fileID: 7260159371250348170}
   m_Layer: 5
   m_Name: ReversoCarta
   m_TagString: Untagged
@@ -277,7 +278,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -4264029087578421448, guid: 5eaa902ec37cab98b9ff417600f20e6e, type: 3}
+  m_Sprite: {fileID: 153719546957187205, guid: 9b9e903f27ad0fd6abf9095997efb5f7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -287,6 +288,28 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &7260159371250348170
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3248409773889329133}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9c0f214dd4c0534488fb040f26119cf8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4385362893958155390
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,8 +598,12 @@ MonoBehaviour:
   isRevealed: 0
   isDead: 0
   isUsed: 0
+  markedForDeath: 0
+  isCorruptedByBeelzebub: 0
+  isBlockedByBelphegor: 0
   roleIcon: {fileID: 4987546607748983129}
   backCover: {fileID: 3248409773889329133}
+  coverAnimator: {fileID: 7260159371250348170}
   idText: {fileID: 4298278382889925067}
   myButton: {fileID: 6488197129278973199}
 --- !u!1 &7884127567462423382
