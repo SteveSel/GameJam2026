@@ -17,13 +17,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Custom.unity
     guid: f0030cda59662b10b91018f3d61fe16c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/modeSelection.unity
     guid: e664c058310b8b8bc93aca1ca1a9f702
   - enabled: 0
     path: Assets/Scenes/NightTimeScene.unity
     guid: aa2ddcb340134cdf2849f589b7abbba2
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Custom1.unity
     guid: 8c464597f14cc5f7eb8c3fe3bcea65e7
   - enabled: 0
