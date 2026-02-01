@@ -579,7 +579,7 @@ public class GameManager : MonoBehaviour
         if (gameOverScreen != null)
 
         {
-            gameOverScreen.ShowGameOver(victory, dayCount);
+            gameOverScreen.ShowGameOver(victory);
         }
         
         if (victory) LogInfo("¡Has eliminado a todos los demonios!"); 
