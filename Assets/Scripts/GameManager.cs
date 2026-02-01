@@ -590,8 +590,6 @@ public class GameManager : MonoBehaviour
             gameOverScreen.ShowGameOver(victory);
         }
         
-        if (victory) LogInfo("¡Has eliminado a todos los demonios!"); 
-        else LogInfo("Has perdido todas tus vidas...");
     }
 
     public bool IsHighRankDemon(RoleType role)
