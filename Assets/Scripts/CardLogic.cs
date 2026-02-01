@@ -283,7 +283,7 @@ public class CardLogic : MonoBehaviour, IPointerClickHandler
         StartCoroutine(BurnRoutine());
         
         GameManager.Instance.UseAP(1);
-        GameManager.Instance.LogInfo($"Investigación: La carta #{cardID} parece {disguisedRole}");
+        GameManager.Instance.LogInfo($"La carta #{cardID} parece {disguisedRole}");
     }
 
     public void UseAbility()
