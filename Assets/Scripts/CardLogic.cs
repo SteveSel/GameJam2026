@@ -122,7 +122,7 @@ public class CardLogic : MonoBehaviour
         {
             if (GameManager.Instance.currentInvestigator == this)
             {
-                GameManager.Instance.LogInfo("Investigator: 'Cancelando investigación...'");
+                GameManager.Instance.LogInfo("'Cancelando...'");
                 GameManager.Instance.isInvestigating = false;
                 GameManager.Instance.currentInvestigator = null;
                 return;
