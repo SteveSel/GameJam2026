@@ -55,6 +55,11 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI expandedLogText; 
     public ScrollRect expandedLogScroll;
 
+    [Header("UI Guía / Enciclopedia")]
+    public GameObject guidePanel;           
+    public Transform guideContentParent;   
+    public GameObject guideEntryPrefab;  
+
     [Header("Notificaciones en Pantalla")]
     public TextMeshProUGUI bigMessageText;
     public CanvasGroup bigMessageCanvasGroup;
@@ -86,8 +91,6 @@ public class GameManager : MonoBehaviour
     public AudioClip flipSound;
     public AudioClip killSound;
     
-
-    // Variable para controlar la corrutina de texto y que no se solapen bruscamente
     private Coroutine currentMessageRoutine;
 
     void Awake()
@@ -111,12 +114,43 @@ public class GameManager : MonoBehaviour
             bigMessageCanvasGroup.blocksRaycasts = false;
         }
 
+        GenerateGuideUI();
+        if (guidePanel != null) guidePanel.SetActive(false);
+
         if (expandedLogPanel != null) expandedLogPanel.SetActive(false);
         if (infoLog != null) infoLog.text = "Inicio de la partida...";
         if (expandedLogText != null) expandedLogText.text = "--- HISTORIAL DE LA PARTIDA ---\n";
 
         // Mostrar Día 1 al iniciar
         ShowOnScreenMessage("Día " + dayCount);
+    }
+
+    void GenerateGuideUI()
+    {
+        if (guideContentParent == null || guideEntryPrefab == null) return;
+
+        // Limpiar por si acaso
+        foreach (Transform child in guideContentParent) Destroy(child.gameObject);
+
+        // Recorrer la librería de roles
+        foreach (var roleData in roleLibrary)
+        {
+            GameObject newEntry = Instantiate(guideEntryPrefab, guideContentParent);
+            GuideEntry logic = newEntry.GetComponent<GuideEntry>();
+            if (logic != null)
+            {
+                logic.Setup(roleData);
+            }
+        }
+    }
+
+    public void ToggleGuide()
+    {
+        if (guidePanel != null)
+        {
+            bool isActive = guidePanel.activeSelf;
+            guidePanel.SetActive(!isActive);
+        }
     }
 
     // Esta función ahora muestra el texto en pantalla Y lo guarda en el log pequeño
@@ -425,7 +459,7 @@ public class GameManager : MonoBehaviour
         return count;
     }
 
-    bool IsDemon(RoleType role)
+    public bool IsDemon(RoleType role)
     {
         return role == RoleType.Imp || role == RoleType.Lucifer || role == RoleType.Mammon || role == RoleType.Asmodeus
             || role == RoleType.Satan || role == RoleType.Beelzebub || role == RoleType.Belphegor || role == RoleType.Leviathan;
