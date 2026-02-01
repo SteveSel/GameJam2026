@@ -1960,192 +1960,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 546347781}
   m_CullTransparentMesh: 1
---- !u!1 &560755279
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 560755280}
-  - component: {fileID: 560755281}
-  - component: {fileID: 560755282}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &560755280
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 560755279}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.07244, y: 0.0108, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &560755281
+--- !u!114 &560755281 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+  m_PrefabInstance: {fileID: 7314817417655338619}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 560755279}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4c7499ac53c5b842b8c580758330007, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  roleLibrary:
-  - role: 0
-    artwork: {fileID: 7998097987651169636, guid: 184f91bfc3fbb1eea9abf554e4d16763, type: 3}
-    description: Te cura 1HP. Si miente te envenena(-1HP).
-  - role: 1
-    artwork: {fileID: -2857615581717565144, guid: 3d2e354b214abb2f6b85d45f86663593, type: 3}
-    description: "Te dice el n\xFAmero exacto de demonios en la mesa."
-  - role: 2
-    artwork: {fileID: 5966561773005759900, guid: bbb77d7ff6a9181bba13df0d0ac6ac0e, type: 3}
-    description: Selecciona a otra carta para revelar si dice la verdad.
-  - role: 5
-    artwork: {fileID: -4657203570002021895, guid: 5a91c28a6661ee8ccafc5034106528f2, type: 3}
-    description: Te dice cuantos de sus vecinos mienten.
-  - role: 6
-    artwork: {fileID: 7032034394150237843, guid: edbec0a5d9bab48429763d03a85a676c, type: 3}
-    description: Avisa si hay un demonio de alto rango cerca (distancia 2).
-  - role: 3
-    artwork: {fileID: 8011849005139895933, guid: 5638ba7e0d4ee4f5abc3f523ea6505f0, type: 3}
-    description: 'Revela si una carta aleatoria es demonio o no. '
-  - role: 4
-    artwork: {fileID: -421801950753315604, guid: 5c022c30e7841ea67b817a3b732cafab, type: 3}
-    description: Te da 3 cartas. 2 dicen la verdad 1 miente.
-  - role: 7
-    artwork: {fileID: -5912325313777698119, guid: 3adf85508333eef0691f2d00a3876013, type: 3}
-    description: "Dispara a ora carta. Esta muere. Si era humano te resta 1HP y el
-      hunter muere al dia siguiente. Si el hunter es un demonio disfrazado disparar\xE1
-      a un villager aleatorio."
-  - role: 8
-    artwork: {fileID: 383055705233254245, guid: f3ef5b6b2426ea973a8e0788a1cb50c1, type: 3}
-    description: Selecciona otra carta para revelar si son del mismo bando.
-  - role: 9
-    artwork: {fileID: -3242689637569255538, guid: e1e0a68fa37ad0a86a3166cf0514fea3, type: 3}
-    description: "Si est\xE1 al lado de un demonio se sacrifica y muere. Si no ilumina."
-  - role: 10
-    artwork: {fileID: -5875821721826369101, guid: dfa5ff201c7ee2134900d198410e70f0, type: 3}
-    description: "Demonio b\xE1sico. Se disfraza y miente."
-  - role: 11
-    artwork: {fileID: -366426956120913545, guid: db96d56ac002a64658816b29a389f18f, type: 3}
-    description: "Demonio de alto rango. Se disfraza y miente. Si est\xE1 vivo de
-      noche mata a un aldeano random."
-  - role: 13
-    artwork: {fileID: 4101227911967838153, guid: fa5456b6209c83a3fa6ad7328f82d979, type: 3}
-    description: Demonio de alto rango. Se disfraza y miente. Sus vecinos mienten
-      siempre (los corrompe).
-  - role: 12
-    artwork: {fileID: 68695456585991590, guid: 0f17407d4d4a1ae9eb11c00d73860c7e, type: 3}
-    description: "Demonio de alto rango. Se disfraza y miente. Si est\xE1 vivo de
-      noche te resta 1Ap el dia siguiente."
-  - role: 14
-    artwork: {fileID: 8499138714940113653, guid: a8c4b54b5b65b1c90a31a67550ad20ad, type: 3}
-    description: Demonio de alto rango. Se disfraza y miente. SI lo tocas te quema
-      (-1HP).
-  - role: 15
-    artwork: {fileID: -327930094771426124, guid: 99f4496d09cf81a22ab6a94e1a54e3a9, type: 3}
-    description: Demonio de alto rango. Se disfraza y miente. Corrompe a un aldeno
-      aleatorio de la mesa (miente).
-  - role: 16
-    artwork: {fileID: -9072026006306667466, guid: 8f932aee0c4a3b30fac17443b844c3c5, type: 3}
-    description: Demonio de alto rango. Se disfraza y miente. Bloquea a uno de sus
-      vecinos (no lo puedes usar) hasta que belphegor muere.
-  - role: 17
-    artwork: {fileID: 4581237084663602618, guid: cc02fb152d8333b5a9ec85038f19c4e0, type: 3}
-    description: Demonio de alto rango. Se disfraza y miente. Copia la apariencia
-      de uno de sus vecinos.
-  - role: 18
-    artwork: {fileID: 3061464458736431984, guid: 1a9dc8cadbc7361139568282ad3a43b9, type: 3}
-    description: Se disfraza y miente. Si lo matas te resta 1AP permanentemente.
-  - role: 19
-    artwork: {fileID: -4483496470515218099, guid: d0bdea3ac1ef5ad33ad3901359f3faf8, type: 3}
-    description: "Se disfraza y miente. Si lo matas se acaba el d\xEDa immediatamente. "
-  - role: 20
-    artwork: {fileID: 9034324844616160691, guid: 23ee8dcd5f6f360deba5af323dc370da, type: 3}
-    description: De noche copia el rol de un vecino aleatorio.
-  - role: 21
-    artwork: {fileID: -2899254304946609944, guid: bee5d321a83f98d35a09a92a8f2c8500, type: 3}
-    description: "No hace nada. Si lo matas pierdes 1HP. Los demonios y neutrales
-      se pueden disfrazar como \xE9l."
-  currentPhase: 0
-  dayCount: 1
-  currentAP: 5
-  maxAP: 5
-  playerLives: 5
-  maxLives: 5
-  totalCardsInGame: 6
-  isGameOver: 0
-  isExecutionMode: 0
-  isInvestigating: 0
-  currentInvestigator: {fileID: 0}
-  permanentAPPenalty: 0
-  apText: {fileID: 1737718372}
-  livesText: {fileID: 1463590926}
-  executionButtonImage: {fileID: 1517317878}
-  sleepButtonImage: {fileID: 1579064054}
-  infoLog: {fileID: 546347783}
-  expandedLogPanel: {fileID: 1228386878}
-  expandedLogText: {fileID: 289760484}
-  expandedLogScroll: {fileID: 538614605}
-  guidePanel: {fileID: 380246965}
-  guideContentParent: {fileID: 1596544813}
-  guideEntryPrefab: {fileID: 5670560455301591999, guid: c47514bb5d228ad4bb7e21d3eac29fa3, type: 3}
-  bigMessageText: {fileID: 1065239463}
-  bigMessageCanvasGroup: {fileID: 1065239462}
-  messageDuration: 2
-  fadePanel: {fileID: 1656210366}
-  backgroundAnimator: {fileID: 424490818}
-  fadeDuration: 1
-  gameOverPanel: {fileID: 0}
-  resultTitle: {fileID: 0}
-  statsSummary: {fileID: 0}
-  dayAmbience: {fileID: 1069849091}
-  dayVillage: {fileID: 704298058}
-  nightAmbience: {fileID: 973618675}
-  nightCrickets: {fileID: 286769067}
-  nightWind: {fileID: 1486765211}
-  nightCracking: {fileID: 1919044309}
-  sfxSource: {fileID: 1500910735}
-  flipSound: {fileID: 8300000, guid: 3008f59a7b4fe764e951736df277ebd6, type: 3}
-  killSound: {fileID: 8300000, guid: c2101aff3e679b84e93bba42fa8c5dbe, type: 3}
---- !u!114 &560755282
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 560755279}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85b6584b36c60d67b8a0c2e15a5471fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CardDealer
-  prefabCarta: {fileID: 6085568935885337069, guid: 5edc726d3697f5f4eb433db99508601a, type: 3}
-  contenedorCartas: {fileID: 228696476}
-  totalCartas: 6
-  rolesObligatorios: 0a0000000a0000000200000003000000
-  rolesRelleno: 02000000040000000600000000000000010000000300000005000000090000000700000008000000
-  escalaCarta: 0.18
-  radioX: 300
-  radioY: 150
-  centroCirculo: {x: 0, y: 0}
-  anguloInicio: 360
-  anguloFin: 0
 --- !u!1 &565479916
 GameObject:
   m_ObjectHideFlags: 0
@@ -2500,7 +2325,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -182.99988, y: 32.99999}
+  m_AnchoredPosition: {x: -182.99988, y: 32.99974}
   m_SizeDelta: {x: 183, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &696475602
@@ -2997,6 +2822,7 @@ RectTransform:
   - {fileID: 380246966}
   - {fileID: 1023785303}
   - {fileID: 1228386879}
+  - {fileID: 2129377878}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3652,7 +3478,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 644613041}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 0.9999998
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4652,7 +4478,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 7063981}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.98961
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6424,6 +6250,311 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1001 &2129377877
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 868504021}
+    m_Modifications:
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2493862742801018758, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_Name
+      value: GameOverPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 2493862742801018758, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5484816879819583107, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5484816879819583107, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5484816879819583107, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7314817417655338620}
+    - target: {fileID: 5484816879819583107, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5484816879819583107, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Load
+      objectReference: {fileID: 0}
+    - target: {fileID: 5484816879819583107, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5484816879819583107, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+--- !u!224 &2129377878 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1380118676192947962, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+  m_PrefabInstance: {fileID: 2129377877}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2129377879 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2068086296954492710, guid: a0d827f04c88c9ed1b0693e9fe917422, type: 3}
+  m_PrefabInstance: {fileID: 2129377877}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a07c66330d39e572ab830dc71a0d3866, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameOverUI
+--- !u!1001 &7314817417655338619
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 183684112782701164, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: m_Name
+      value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4407021016351137189, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: contenedorCartas
+      value: 
+      objectReference: {fileID: 228696476}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: apText
+      value: 
+      objectReference: {fileID: 1737718372}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: infoLog
+      value: 
+      objectReference: {fileID: 546347783}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: fadePanel
+      value: 
+      objectReference: {fileID: 1656210366}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: livesText
+      value: 
+      objectReference: {fileID: 1463590926}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: nightWind
+      value: 
+      objectReference: {fileID: 1486765211}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: sfxSource
+      value: 
+      objectReference: {fileID: 1500910735}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: dayVillage
+      value: 
+      objectReference: {fileID: 704298058}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: guidePanel
+      value: 
+      objectReference: {fileID: 380246965}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: dayAmbience
+      value: 
+      objectReference: {fileID: 1069849091}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: nightAmbience
+      value: 
+      objectReference: {fileID: 973618675}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: nightCracking
+      value: 
+      objectReference: {fileID: 1919044309}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: nightCrickets
+      value: 
+      objectReference: {fileID: 286769067}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: bigMessageText
+      value: 
+      objectReference: {fileID: 1065239463}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: gameOverScreen
+      value: 
+      objectReference: {fileID: 2129377879}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: expandedLogText
+      value: 
+      objectReference: {fileID: 289760484}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: expandedLogPanel
+      value: 
+      objectReference: {fileID: 1228386878}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: sleepButtonImage
+      value: 
+      objectReference: {fileID: 1579064054}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: expandedLogScroll
+      value: 
+      objectReference: {fileID: 538614605}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: backgroundAnimator
+      value: 
+      objectReference: {fileID: 424490818}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: guideContentParent
+      value: 
+      objectReference: {fileID: 1596544813}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: executionButtonImage
+      value: 
+      objectReference: {fileID: 1517317878}
+    - target: {fileID: 4877095084427771624, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: bigMessageCanvasGroup
+      value: 
+      objectReference: {fileID: 1065239462}
+    - target: {fileID: 5452629212472654449, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.07244
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452629212472654449, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0108
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452629212472654449, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452629212472654449, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452629212472654449, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452629212472654449, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452629212472654449, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452629212472654449, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452629212472654449, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452629212472654449, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+--- !u!114 &7314817417655338620 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7003516176609585067, guid: 572df2b92914da331b06d05cd84bba3d, type: 3}
+  m_PrefabInstance: {fileID: 7314817417655338619}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5814272764dd57fa3ad00b26ece5cc81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainMenu
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -6439,4 +6570,4 @@ SceneRoots:
   - {fileID: 704298059}
   - {fileID: 868504021}
   - {fileID: 55165286}
-  - {fileID: 560755280}
+  - {fileID: 7314817417655338619}
