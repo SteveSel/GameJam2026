@@ -48,12 +48,17 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI livesText;
     public Image executionButtonImage;
     public Image sleepButtonImage;
-    public TextMeshProUGUI infoLog; // El log pequeño (historial)
+    public TextMeshProUGUI infoLog;
+
+    [Header("UI Log Expandido")]
+    public GameObject expandedLogPanel;     
+    public TextMeshProUGUI expandedLogText; 
+    public ScrollRect expandedLogScroll;
 
     [Header("Notificaciones en Pantalla")]
-    public TextMeshProUGUI bigMessageText;       // ARRASTRA AQUÍ TU NUEVO TEXTO
-    public CanvasGroup bigMessageCanvasGroup;    // ARRASTRA AQUÍ EL CANVAS GROUP DEL TEXTO
-    public float messageDuration = 2.0f;         // Cuanto tiempo se queda el mensaje en pantalla
+    public TextMeshProUGUI bigMessageText;
+    public CanvasGroup bigMessageCanvasGroup;
+    public float messageDuration = 2.0f;
 
     [Header("Transición Día/Noche")]
     public CanvasGroup fadePanel;
@@ -89,6 +94,10 @@ public class GameManager : MonoBehaviour
             bigMessageCanvasGroup.blocksRaycasts = false;
         }
 
+        if (expandedLogPanel != null) expandedLogPanel.SetActive(false);
+        if (infoLog != null) infoLog.text = "Inicio de la partida...";
+        if (expandedLogText != null) expandedLogText.text = "--- HISTORIAL DE LA PARTIDA ---\n";
+
         // Mostrar Día 1 al iniciar
         ShowOnScreenMessage("Día " + dayCount);
     }
@@ -97,10 +106,31 @@ public class GameManager : MonoBehaviour
     public void LogInfo(string message)
     {
         // 1. Log pequeño (Historial)
-        if (infoLog != null) infoLog.text += "> " + message;
-
+        if (infoLog != null) infoLog.text += $"[Día {dayCount}] {message} \n";
+        if (expandedLogText != null) expandedLogText.text += $"[Día {dayCount}] {message} \n";
+        
         // 2. Texto Grande en Pantalla
         ShowOnScreenMessage(message);
+    }
+
+    public void OpenExpandedLog()
+    {
+        if (expandedLogPanel != null)
+        {
+            expandedLogPanel.SetActive(true);
+            StartCoroutine(ScrollToBottom());
+        }
+    }
+
+    public void CloseExpandedLog()
+    {
+        if (expandedLogPanel != null) expandedLogPanel.SetActive(false);
+    }
+
+    IEnumerator ScrollToBottom()
+    {
+        yield return new WaitForEndOfFrame();
+        if (expandedLogScroll != null) expandedLogScroll.verticalNormalizedPosition = 0f;
     }
 
     public void ShowOnScreenMessage(string message)
@@ -243,7 +273,7 @@ public class GameManager : MonoBehaviour
                 Sprite newSprite = GetSpriteForRole(amn.disguisedRole);
                 if (amn.roleIcon != null) amn.roleIcon.sprite = newSprite;
 
-                LogInfo($"NOCHE: Un Amnesiac ha recordado quién es...");
+                LogInfo("NOCHE: Un Amnesiac ha recordado quién es...");
             }
         }
 
