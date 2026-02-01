@@ -2087,8 +2087,8 @@ MonoBehaviour:
   dayCount: 1
   currentAP: 6
   maxAP: 6
-  playerLives: 5
-  maxLives: 5
+  playerLives: 7
+  maxLives: 7
   totalCardsInGame: 10
   isGameOver: 0
   isExecutionMode: 0
@@ -2512,7 +2512,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -182.99988, y: 32.99916}
+  m_AnchoredPosition: {x: -182.99988, y: 32.99969}
   m_SizeDelta: {x: 183, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &696475602
@@ -3666,7 +3666,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 644613041}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.9999998
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4666,7 +4666,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 7063981}
   m_Direction: 2
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.9894975
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
